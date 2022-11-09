@@ -1,10 +1,10 @@
 package com.goteatfproject.appgot.service;
 
-import com.goteatfproject.appgot.dao.MemberDao;
-import com.goteatfproject.appgot.vo.Member;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import com.goteatfproject.appgot.dao.MemberDao;
+import com.goteatfproject.appgot.vo.Member;
 
 @Service
 public class DefaultMemberService implements MemberService {
@@ -18,6 +18,11 @@ public class DefaultMemberService implements MemberService {
   }
 
   @Override
+  public boolean update(Member member) throws Exception {
+    return memberDao.update(member) > 0;
+  }
+
+  @Override
   public Member get(int no) throws Exception {
     return memberDao.findByNo(no);
   }
@@ -27,6 +32,7 @@ public class DefaultMemberService implements MemberService {
     return memberDao.findByEmailPassword(id, password);
   }
 
+  @Override
   public List<Member> list() throws Exception {
     return memberDao.findAll();
   }

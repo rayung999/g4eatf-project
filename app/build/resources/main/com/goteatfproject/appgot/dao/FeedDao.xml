@@ -1,146 +1,146 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.goteatfproject.appgot.dao.FeedDao">
 
-  <!-- 자바 객체의 프로퍼티와 컬럼 이름을 연결한다. -->
-  <resultMap type="feed" id="feedMap">
-    <id column="fno" property="no"/>
-    <result column="title" property="title"/>
-    <result column="cont" property="content"/>
-    <result column="date" property="date"/>
-    <result column="image" property="image"/>
+    <!-- 자바 객체의 프로퍼티와 컬럼 이름을 연결한다. -->
+    <resultMap type="feed" id="feedMap">
+        <id column="fno" property="no"/>
+        <result column="title" property="title"/>
+        <result column="cont" property="content"/>
+        <result column="date" property="date"/>
+        <result column="image" property="image"/>
 
-    <association property="writer" javaType="member">
-      <id column="mno" property="no"/>
-      <result column="nick" property="nick"/>
-      <result column="addr" property="address"/>
-    </association>
+        <association property="writer" javaType="member">
+            <id column="mno" property="no"/>
+            <result column="nick" property="nick"/>
+            <result column="addr" property="address"/>
+        </association>
 
-    <collection property="feedAttachedFiles" ofType="feedAttachedFile">
-      <id column="feedfileno" property="no"/>
-      <result column="path" property="filepath"/>
-      <result column="filename" property="fileName"/>
-      <result column="savename" property="saveName"/>
-    </collection>
+        <collection property="feedAttachedFiles" ofType="feedAttachedFile">
+            <id column="feedfileno" property="no"/>
+            <result column="path" property="filepath"/>
+            <result column="filename" property="fileName"/>
+            <result column="savename" property="saveName"/>
+        </collection>
 
-  </resultMap>
+    </resultMap>
 
-  <resultMap type="feedAttachedFile" id="feedAttachedFileMap">
-    <id column="feedfileno" property="no"/>
-    <result column="path" property="filepath"/>
-    <result column="filename" property="fileName"/>
-    <result column="savename" property="saveName"/>
-    <result column="fno" property="feedNo"/>
-
-
-  </resultMap>
+    <resultMap type="feedAttachedFile" id="feedAttachedFileMap">
+        <id column="feedfileno" property="no"/>
+        <result column="path" property="filepath"/>
+        <result column="filename" property="fileName"/>
+        <result column="savename" property="saveName"/>
+        <result column="fno" property="feedNo"/>
 
 
-  <select id="findAll" resultMap="feedMap">
-    select
-    f.fno,
-    m.mno,
-    m.nick,
-    m.addr,
-    f.title,
-    f.cont,
-    f.date,
-    f.img
-    from
-    feed f
-    join member m on m.mno = f.mno
-  </select>
+    </resultMap>
 
-  <select id="findByNo" resultMap="feedMap">
-    select
-    f.fno,
-    m.mno,
-    m.nick,
-    m.addr,
-    f.title,
-    f.cont,
-    f.date,
-    f.img
-    ff.feedfileno,
-    ff.path
-    from
-    feed f
-    join member m on m.mno = f.mno
-    left outer join feed_file ff on f.fno = ff.fno
-    where
-    f.fno = #{value}
-  </select>
 
-  <insert id="insert" parameterType="feed"
-      useGeneratedKeys="true" keyColumn="fno" keyProperty="no">
-    insert into feed(title,cont,mno)
-    values(#{title},#{content},#{writer.no})
-  </insert>
+    <select id="findAll" resultMap="feedMap">
+        select
+        f.fno,
+        m.mno,
+        m.nick,
+        m.addr,
+        f.title,
+        f.cont,
+        f.date,
+        f.img
+        from
+        feed f
+        join member m on m.mno = f.mno
+    </select>
 
-  <update id="update" parameterType="feed">
-    update feed set
-    title = #{title},
-    cont = #{content}
-    where
-    fno = #{no}
-  </update>
+    <select id="findByNo" resultMap="feedMap">
+        select
+        f.fno,
+        m.mno,
+        m.nick,
+        m.addr,
+        f.title,
+        f.cont,
+        f.date,
+        f.img
+        ff.feedfileno,
+        ff.path
+        from
+        feed f
+        join member m on m.mno = f.mno
+        left outer join feed_file ff on f.fno = ff.fno
+        where
+        f.fno = #{value}
+    </select>
 
-  <delete id="delete">
-    delete from feed
-    where fno = #{value}
-  </delete>
+    <insert id="insert" parameterType="feed"
+            useGeneratedKeys="true" keyColumn="fno" keyProperty="no">
+        insert into feed(title,cont,mno)
+        values(#{title},#{content},#{writer.no})
+    </insert>
 
-<!-- 첨부파일 관련 -->
+    <update id="update" parameterType="feed">
+        update feed set
+        title = #{title},
+        cont = #{content}
+        where
+        fno = #{no}
+    </update>
 
-  <insert id="insertFiles" parameterType="feed">
-    insert into feed_file(path, fno, filename, savename)
-    <!--      insert into party_file(path, pno)-->
-    values
-    <!--  여러 파일 들어가면 첨부파일 , 사용해서 구분-->
-    <foreach collection="feedAttachedFiles" item="file" separator=",">
-      (#{file.filepath}, #{no}, #{file.fileName}, #{file.saveName})
-      <!--        (#{file.filepath}, #{no})-->
-    </foreach>
-  </insert>
+    <delete id="delete">
+        delete from feed
+        where fno = #{value}
+    </delete>
 
-  <select id="findFileByNo" resultMap="feedAttachedFileMap">
-    select
-    feedfileno,
-    path,
-    fno
-    from
-    feed_file
-    where
-    feedfileno = #{value}
-  </select>
+    <!-- 첨부파일 관련 -->
 
-  <select id="findFilesByParty" resultMap="feedAttachedFileMap">
-    select
-    feedfileno,
-    path,
-    fno
-    from
-    feed_file
-    where
-    fno = #{value}
-  </select>
+    <insert id="insertFiles" parameterType="feed">
+        insert into feed_file(path, fno, filename, savename)
+        <!--      insert into party_file(path, pno)-->
+        values
+        <!--  여러 파일 들어가면 첨부파일 , 사용해서 구분-->
+        <foreach collection="feedAttachedFiles" item="file" separator=",">
+            (#{file.filepath}, #{no}, #{file.fileName}, #{file.saveName})
+            <!--        (#{file.filepath}, #{no})-->
+        </foreach>
+    </insert>
 
-  <delete id="deleteFile">
-    delete from feed_file
-    where feedfileno = #{value}
-  </delete>
+    <select id="findFileByNo" resultMap="feedAttachedFileMap">
+        select
+        feedfileno,
+        path,
+        fno
+        from
+        feed_file
+        where
+        feedfileno = #{value}
+    </select>
 
-  <delete id="deleteFiles">
-    delete from feed_file
-    where fno = #{value}
-  </delete>
+    <select id="findFilesByParty" resultMap="feedAttachedFileMap">
+        select
+        feedfileno,
+        path,
+        fno
+        from
+        feed_file
+        where
+        fno = #{value}
+    </select>
 
-  <delete id="deleteFilesByMemberBoards">
-    delete from feed_file
-    where fno in (select fno from feed where mno = #{value})
-  </delete>
+    <delete id="deleteFile">
+        delete from feed_file
+        where feedfileno = #{value}
+    </delete>
+
+    <delete id="deleteFiles">
+        delete from feed_file
+        where fno = #{value}
+    </delete>
+
+    <delete id="deleteFilesByMemberBoards">
+        delete from feed_file
+        where fno in (select fno from feed where mno = #{value})
+    </delete>
 
 </mapper>
 

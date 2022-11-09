@@ -1,14 +1,16 @@
 package com.goteatfproject.appgot.dao;
 
-import com.goteatfproject.appgot.vo.Member;
 import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import com.goteatfproject.appgot.vo.Member;
 
 @Mapper
 public interface MemberDao {
 
   int insert(Member member);
+
+  int update(Member member);
 
   Member findByNo(int no);
 

@@ -1,13 +1,13 @@
 package com.goteatfproject.appgot.service;
 
-import com.goteatfproject.appgot.vo.Criteria;
-import com.goteatfproject.appgot.vo.Member;
 import java.util.List;
-import java.util.Map;
+import com.goteatfproject.appgot.vo.Member;
 
 public interface MemberService {
 
   void add(Member member) throws Exception;
+
+  boolean update(Member member) throws Exception;
 
   Member get(int no) throws Exception;
 
@@ -15,6 +15,4 @@ public interface MemberService {
 
   List<Member> list() throws Exception;
 
-  //페이징
-//List<Map>
 }

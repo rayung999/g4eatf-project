@@ -1,12 +1,10 @@
 package com.goteatfproject.appgot.dao;
 
-import com.goteatfproject.appgot.vo.AttachedFile;
-import com.goteatfproject.appgot.vo.Criteria;
-import com.goteatfproject.appgot.vo.Party;
-import java.util.Map;
-import org.apache.ibatis.annotations.Mapper;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Mapper;
+import com.goteatfproject.appgot.vo.AttachedFile;
+import com.goteatfproject.appgot.vo.Party;
+import org.apache.ibatis.annotations.Param;
 
 @Mapper
 public interface PartyDao {
@@ -14,12 +12,13 @@ public interface PartyDao {
   int insert(Party party);
 
   List<Party> findAll();
-  // 페이징
-  List<Map<String, Object>> selectPartyList(Criteria cri);
+
+  List<Party> findAll2(@Param("meal") String meal, @Param("food") String food);
 
   Party findByNo(int no);
 
   int update(Party party);
+
   int delete(int no);
 
   int insertFiles(Party party);

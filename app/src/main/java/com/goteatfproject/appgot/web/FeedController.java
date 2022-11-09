@@ -1,6 +1,7 @@
 package com.goteatfproject.appgot.web;
 
 import com.goteatfproject.appgot.service.FeedService;
+import com.goteatfproject.appgot.service.FollowerService;
 import com.goteatfproject.appgot.vo.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,24 +25,24 @@ public class FeedController {
 
   FeedService feedService;
   ServletContext sc;
+  FollowerService followerService;
 
-  public FeedController(FeedService feedService, ServletContext sc) {
+  public FeedController(FeedService feedService, ServletContext sc, FollowerService followerService) {
     System.out.println("FeedController() 호출됨!");
     System.out.println("ServletContext() 호출됨!!");
     this.feedService = feedService;
     this.sc = sc;
+    this.followerService = followerService;
   }
 
   @GetMapping("/list")
   public String list(Model model, HttpSession session) throws Exception {
 
-    // 피드 팔롱 기능
-//    Follower follower = new Follower();
-//    follower.setFollow((int) session.getAttribute("loginMember"));
-//
-//
-//    List<Follower> followList = followerService.selectFollowList(follower.getFollow());
-//    model.addAttribute("follows", followList);
+    // 피드 팔로우 기능
+    Member member = (Member) session.getAttribute("loginMember");
+
+    List<Follower> followList = followerService.selectFollowList(member.getNo());
+    model.addAttribute("follows", followList);
 
     // 피드 리스트 출력
     model.addAttribute("feeds", feedService.list());
@@ -55,7 +56,7 @@ public class FeedController {
 
   @PostMapping("/add")
   public String feedAdd(Feed feed, HttpSession session,
-      @RequestParam("files") MultipartFile[] files) throws Exception {
+                        @RequestParam("files") MultipartFile[] files) throws Exception {
 
     feed.setFeedAttachedFiles(saveFeedAttachedFiles(files));
     feed.setWriter((Member) session.getAttribute("loginMember"));
@@ -122,7 +123,7 @@ public class FeedController {
   // 파티 게시물 수정
   @PostMapping("update")
   public String update(Feed feed, HttpSession session,
-      Part[] files) throws Exception {
+                       Part[] files) throws Exception {
 
     feed.setFeedAttachedFiles(saveFeedAttachedFiles(files));
 

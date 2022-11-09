@@ -26,9 +26,9 @@ public class DefaultFeedService implements FeedService {
       throw new Exception("게시글 등록 실패");
     }
 
-     if(feed.getFeedAttachedFiles().size() > 0) {
-     feedDao.insertFiles(feed);
-     }
+    if(feed.getFeedAttachedFiles().size() > 0) {
+      feedDao.insertFiles(feed);
+    }
   }
 
   @Override

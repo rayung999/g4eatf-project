@@ -1,17 +1,12 @@
 package com.goteatfproject.appgot.service;
 
-import ch.qos.logback.core.encoder.EchoEncoder;
-import com.goteatfproject.appgot.dao.PartyDao;
-import com.goteatfproject.appgot.vo.AttachedFile;
-import com.goteatfproject.appgot.vo.Criteria;
-import com.goteatfproject.appgot.vo.Party;
-import java.util.Map;
-import javax.servlet.http.Part;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 import org.springframework.transaction.annotation.Transactional;
+import com.goteatfproject.appgot.dao.PartyDao;
+import com.goteatfproject.appgot.vo.AttachedFile;
+import com.goteatfproject.appgot.vo.Party;
 
 @Service
 public class DefaultPartyService implements PartyService {
@@ -19,6 +14,7 @@ public class DefaultPartyService implements PartyService {
   @Autowired
   PartyDao partyDao;
 
+  @Override
   @Transactional
   public void add(Party party) throws Exception {
 
@@ -36,9 +32,9 @@ public class DefaultPartyService implements PartyService {
     return partyDao.findAll();
   }
 
-  //페이징
-  public List<Map<String, Object>> selectPartyList(Criteria cri) {
-    return partyDao.selectPartyList(cri);
+  @Override
+  public List<Party> list2(String meal, String food) throws Exception {
+    return partyDao.findAll2(meal, food);
   }
 
   @Override
@@ -67,14 +63,13 @@ public class DefaultPartyService implements PartyService {
     return partyDao.delete(no) > 0;
   }
 
+  @Override
   public AttachedFile getAttachedFile(int fileNo) throws Exception {
     return partyDao.findFileByNo(fileNo);
   }
 
+  @Override
   public boolean deleteAttachedFile(int fileNo) throws Exception {
     return partyDao.deleteFile(fileNo) > 0;
   }
-
-
-
 }

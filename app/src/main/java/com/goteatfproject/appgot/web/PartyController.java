@@ -1,10 +1,5 @@
 package com.goteatfproject.appgot.web;
 
-import com.goteatfproject.appgot.vo.AttachedFile;
-import com.goteatfproject.appgot.vo.Criteria;
-import com.goteatfproject.appgot.vo.PageMaker;
-import com.goteatfproject.appgot.vo.Party;
-import com.goteatfproject.appgot.vo.Member;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,10 +17,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import com.goteatfproject.appgot.service.PartyService;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
+import com.goteatfproject.appgot.service.PartyService;
+import com.goteatfproject.appgot.vo.AttachedFile;
+import com.goteatfproject.appgot.vo.Member;
+import com.goteatfproject.appgot.vo.Party;
 
 @Controller
 @RequestMapping("/party/")
@@ -41,37 +38,24 @@ public class PartyController {
     this.sc = sc;
   }
 
-  //  @GetMapping("/list")
-  //  public String list() {
-  //    return "board/boardList";
+  // 파티 리스트
+  //  @GetMapping("list")
+  //  public String partyList(Model model) throws Exception {
+  //    model.addAttribute("parties", partyService.list());
+  //    System.out.println(model.getAttribute("parties"));
+  //    return "party/partyList";
   //  }
 
-  // 파티 리스트
-//  @GetMapping("list")
-//  public String partyList(Model model) throws Exception {
-//    model.addAttribute("parties", partyService.list());
-//    return "party/partyList";
-//  }
-
   @GetMapping("list")
-  public ModelAndView partyList(Criteria cri) throws Exception {
-
-    // 기존에는 return에서 보냈으면 mv에서는 여기서 보냄
-//    ModelAndView mv = new ModelAndView("party/partyList");
-    ModelAndView mv = new ModelAndView();
-
-    PageMaker pageMaker = new PageMaker();
-    pageMaker.setCri(cri);
-    pageMaker.setTotalCount(50);
-
-    List<Map<String, Object>> list = partyService.selectPartyList(cri);
-    mv.addObject("list", list);
-    mv.addObject("pageMaker", pageMaker);
-
-    mv.setViewName("party/partyList");
-//    model.addAttribute("parties", partyService.list());
-//    return "party/partyList";
-    return mv;
+  public String partyList(Model model, String meal, String food) throws Exception {
+    //    if(meal.length() == 0) { // 파라미터의 값이 없으면 = > 전체 리스트 출력
+    //      meal = null;
+    //    } // xml if 조건문 설정
+    model.addAttribute("parties", partyService.list2(meal, food));
+    model.addAttribute("meal", meal);
+    model.addAttribute("food", food);
+    //        System.out.println(model.getAttribute("parties"));
+    return "party/partyList";
   }
 
   // 파티 리스트 게시물 등록
@@ -122,8 +106,8 @@ public class PartyController {
         continue;
       }
 
-    System.out.println("filename3 = " + Arrays.toString(files));
-    System.out.println("filename4 = " + files);
+      System.out.println("filename3 = " + Arrays.toString(files));
+      System.out.println("filename4 = " + files);
       System.out.println("dirPath = " + dirPath);
 
       String filename = UUID.randomUUID().toString();
@@ -141,15 +125,15 @@ public class PartyController {
     if (party == null) {
       throw new Exception("해당 번호의 게시글이 없습니다!");
     }
-      Map map = new HashMap();
-      map.put("party", party);
-      return map;
-    }
+    Map map = new HashMap();
+    map.put("party", party);
+    return map;
+  }
 
-    // 파티 게시물 수정
-    @PostMapping("update")
+  // 파티 게시물 수정
+  @PostMapping("update")
   public String update(Party party, HttpSession session,
-        Part[] files) throws Exception {
+      Part[] files) throws Exception {
 
     party.setAttachedFiles(saveAttachedFiles(files));
 
@@ -160,8 +144,8 @@ public class PartyController {
     if (!partyService.update(party)) {
       throw new Exception("게시글을 변경할 수 없습니다.");
     }
-      return "redirect:list";
-   }
+    return "redirect:list";
+  }
 
   private void checkOwner(int partyNo, HttpSession session) throws Exception {
     Member loginMember = (Member) session.getAttribute("loginMember");
