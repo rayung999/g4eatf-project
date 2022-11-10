@@ -12,28 +12,29 @@ import java.util.List;
 
 public interface FeedDao {
 
-  List<Feed> randomfindAll();
+  List<Feed> selectListById(String id) throws Exception;
+  List<Feed> randomfindAll() throws Exception;
 
-  List<Feed> findAll();
+  List<Feed> findAll() throws Exception;
 
-  Feed findByNo(int no);
+  Feed findByNo(int no) throws Exception;
 
-  int insert(Feed feed);
+  int insert(Feed feed) throws Exception;
 
-  int update(Feed feed);
+  int update(Feed feed) throws Exception;
 
-  int delete(int no);
+  int delete(int no) throws Exception;
 
-  int insertFiles(Feed feed);
+  int insertFiles(Feed feed) throws Exception;
 
-  FeedAttachedFile findFileByNo(int fileNo);
+  FeedAttachedFile findFileByNo(int fileNo) throws Exception;
 
-  List<FeedAttachedFile> findFilesByParty(int feedNo);
+  List<FeedAttachedFile> findFilesByParty(int feedNo) throws Exception;
 
-  int deleteFile(int fileNo);
+  int deleteFile(int fileNo) throws Exception;
 
-  int deleteFiles(int feedNo);
+  int deleteFiles(int feedNo) throws Exception;
 
-  int deleteFilesByMemberFeeds(int memberNo);
+  int deleteFilesByMemberFeeds(int memberNo) throws Exception;
 }
 

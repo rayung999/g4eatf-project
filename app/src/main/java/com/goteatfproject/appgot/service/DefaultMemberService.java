@@ -1,6 +1,8 @@
 package com.goteatfproject.appgot.service;
 
 import java.util.List;
+
+import ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.goteatfproject.appgot.dao.MemberDao;
@@ -46,6 +48,10 @@ public class DefaultMemberService implements MemberService {
 
   public Member profileByNo(int no) throws Exception {
     return memberDao.profileByNo(no);
+  }
+
+  public Member profileById(String id) throws Exception {
+    return memberDao.profileById(id);
   }
 
 }

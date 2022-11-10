@@ -22,6 +22,5 @@ public interface FollowerDao {
 
   List<Follower> selectFollowingList(int following);
 
-  void deleteAllFollow(int follow);
 
 }

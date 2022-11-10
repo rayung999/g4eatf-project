@@ -46,6 +46,11 @@ public class DefaultFeedService implements FeedService {
     return feedDao.randomfindAll();
   }
 
+  @Override
+  public List<Feed> selectListById(String id) throws Exception {
+    return feedDao.selectListById(id);
+  }
+
   @Transactional
   @Override
   public boolean update(Feed feed) throws Exception {

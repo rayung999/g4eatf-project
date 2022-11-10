@@ -10,6 +10,7 @@ import java.util.List;
 public interface FeedService {
 
 
+  List<Feed> selectListById(String id) throws Exception;
   List<Feed> randomlist() throws Exception;
   List<Feed> list() throws Exception;
   void add(Feed feed) throws Exception;

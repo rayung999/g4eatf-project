@@ -14,8 +14,6 @@ public interface FollowerService {
 
   int isFollow(Follower follower) throws Exception;
 
-//  List<Follower> userList(int follow) throws Exception;
-
   List<Follower> selectFollowList(int follow) throws Exception;
 
   List<Follower> selectFollowingList(int following) throws Exception;

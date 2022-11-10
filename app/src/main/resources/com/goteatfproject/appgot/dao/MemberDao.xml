@@ -77,10 +77,11 @@
         Limit 20
     </select>
 
-    <!--  회원 번호로 회원 모든 정보 조회  -->
+    <!--  회원 번호로 유저의 정보 조회  -->
     <select id="profileByNo" resultMap="memberMap">
         select
         mno,
+        id,
         nick,
         birth,
         gender,
@@ -88,7 +89,22 @@
         intro
         profile
         from member
+        where mno=#{mno}
+    </select>
 
+    <!--  회원 이메일로 유저의 정보 조회  -->
+    <select id="profileById" resultMap="memberMap">
+        select
+        mno,
+        id,
+        nick,
+        birth,
+        gender,
+        interest,
+        intro
+        profile
+        from member
+        where id=#{id}
     </select>
 
 </mapper>

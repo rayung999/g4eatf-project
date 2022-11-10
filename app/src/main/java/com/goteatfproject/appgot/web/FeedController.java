@@ -24,7 +24,6 @@ public class FeedController {
   FeedService feedService;
   ServletContext sc;
   FollowerService followerService;
-
   MemberService memberService;
 
   public FeedController(
@@ -40,7 +39,7 @@ public class FeedController {
   @PostMapping("/follow")
   public String follow(int no, Model model, HttpSession session) throws Exception {
 
-    Object object = (Member) session.getAttribute("loginMember");
+    Object object = session.getAttribute("loginMember");
     Member follow = (Member)object;
     Member following = memberService.profileByNo(no);
 
@@ -50,13 +49,13 @@ public class FeedController {
 
     followerService.follow(follower);
 
-    return "feed/feedProfile";
+    return "feed/Feed";
   }
 
   @PostMapping("/unfollow")
   public String unfollow(int no, Model model, HttpSession session) throws Exception {
 
-    Object object = (Member) session.getAttribute("loginMember");
+    Object object = session.getAttribute("loginMember");
     Member follow = (Member)object;
     Member following = memberService.profileByNo(no);
 
@@ -66,26 +65,66 @@ public class FeedController {
 
     followerService.unfollow(follower);
 
-    return "feed/feedProfile";
+    return "feed/Feed";
   }
 
+  // 한 유저의 게시물 출력 홈페이지
+  @GetMapping("/personalList")
+  public String personalList(String id, Model model, HttpSession session) throws Exception {
 
+    // 아이디로 회원 정보 조회
+    Member member = memberService.profileById(id);
 
+    // 로그인한 회원 정보 담기
+    Object object = session.getAttribute("loginMember");
+    Member loginMember = (Member)object;
+
+    // 개인페이지의 유저 번호 가져오기
+    int memberNo = member.getNo();
+    // 로그인 회원 유저 번호 가져오기
+    int loginMemberNo = loginMember.getNo();
+
+    // 팔로우 객체 생성
+    Follower follower = new Follower();
+    follower.setFollow(loginMemberNo);
+    follower.setFollowing(memberNo);
+
+    // 팔로우 유무 체크
+    int followCheck = followerService.isFollow(follower);
+
+    // 나를 팔로우하는 유저들의 목록
+    List<Follower> followerList = followerService.selectFollowingList(memberNo);
+    // 내가 팔로우하는 사람들의 목록
+    List<Follower> followeringList = followerService.selectFollowList(memberNo);
+
+    // 사용자 아이디로 사용자 번호를 조회해서 그 번호로 게시물 땡겨옴
+    model.addAttribute("list", feedService.selectListById(id));
+    // 사용자 아이디로 회원의 모든 정보 조회하기
+    model.addAttribute("member", member);
+    // 팔로우 체크 유무
+    model.addAttribute("followCheck", followCheck);
+
+    model.addAttribute("followerList", followerList);
+    model.addAttribute("followeringList", followeringList);
+
+    return "feed/Feed";
+
+  }
 
   @GetMapping("/list")
   public String list(Model model, HttpSession session) throws Exception {
 
     // 피드 팔로우 기능
-    Member member = (Member) session.getAttribute("loginMember");
+    Member loginMember = (Member) session.getAttribute("loginMember");
 
-    if(member != null) {
-      List<Follower> followList = followerService.selectFollowList(member.getNo());
+    if(loginMember != null) {
+      List<Follower> followList = followerService.selectFollowList(loginMember.getNo());
       model.addAttribute("follows", followList);
     } else {
       model.addAttribute("members", memberService.randomList());
     }
     // 피드 리스트 출력
-    if(member != null) {
+    if(loginMember != null) {
 
       model.addAttribute("feeds", feedService.list());
     } else {
@@ -172,8 +211,8 @@ public class FeedController {
 
     feed.setFeedAttachedFiles(saveFeedAttachedFiles(files));
 
-    // detail.html : <input name="no" type="number" value="1" th:value="${party.no}" readonly hidden/>
-    // 위에 추가해야 party.getNo() 가져오기 가능 System.out.println("partyNo = " + party.getNo());
+//     detail.html : <input name="no" type="number" value="1" th:value="${party.no}" readonly hidden/>
+//     위에 추가해야 party.getNo() 가져오기 가능 System.out.println("partyNo = " + party.getNo());
     checkOwner(feed.getNo(), session);
 
     if (!feedService.update(feed)) {
@@ -184,9 +223,7 @@ public class FeedController {
 
   private void checkOwner(int feedNo, HttpSession session) throws Exception {
     Member loginMember = (Member) session.getAttribute("loginMember");
-    // 개인이해메모
-    // getWriter().getNo() != loginMember.getNo() // 로그인 멤버no 꺼내서 party에 있는 Member writer 이용해서 일치여부 확인
-    // 방향 ----->
+
     if (feedService.get(feedNo).getWriter().getNo() != loginMember.getNo()) {
       throw new Exception("게시글 작성자가 아닙니다.");
     }
