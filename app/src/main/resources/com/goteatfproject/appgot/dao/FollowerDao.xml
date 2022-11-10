@@ -13,20 +13,7 @@
         <result column="profile" property="profile"/>
 
 
-
-
-
-
     </resultMap>
-
-
-
-    <!--    <collection property="followerUser" javaType="member">-->
-    <!--      <id column="mno" property="no"/>-->
-    <!--      <result column="nick" property="nick"/>-->
-    <!--      <result column="intro" property="intro"/>-->
-    <!--      <result column="profile" property="profile"/>-->
-    <!--    </collection>-->
 
 
     <!-- 팔로우 기능 -->

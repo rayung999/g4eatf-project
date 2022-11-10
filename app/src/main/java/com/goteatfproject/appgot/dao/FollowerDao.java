@@ -1,6 +1,7 @@
 package com.goteatfproject.appgot.dao;
 
 import com.goteatfproject.appgot.vo.Follower;
+import com.goteatfproject.appgot.vo.Member;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -14,6 +15,8 @@ public interface FollowerDao {
   void unfollow(Follower follower);
 
   int isFollow(Follower follower);
+
+//  List<Follower> userList(int follow);
 
   List<Follower> selectFollowList(int follow);
 

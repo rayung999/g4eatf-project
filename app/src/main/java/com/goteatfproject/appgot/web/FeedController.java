@@ -2,13 +2,11 @@ package com.goteatfproject.appgot.web;
 
 import com.goteatfproject.appgot.service.FeedService;
 import com.goteatfproject.appgot.service.FollowerService;
+import com.goteatfproject.appgot.service.MemberService;
 import com.goteatfproject.appgot.vo.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.ServletContext;
@@ -27,13 +25,52 @@ public class FeedController {
   ServletContext sc;
   FollowerService followerService;
 
-  public FeedController(FeedService feedService, ServletContext sc, FollowerService followerService) {
+  MemberService memberService;
+
+  public FeedController(
+      FeedService feedService, ServletContext sc, FollowerService followerService, MemberService memberService) {
     System.out.println("FeedController() 호출됨!");
     System.out.println("ServletContext() 호출됨!!");
     this.feedService = feedService;
     this.sc = sc;
     this.followerService = followerService;
+    this.memberService = memberService;
   }
+
+  @PostMapping("/follow")
+  public String follow(int no, Model model, HttpSession session) throws Exception {
+
+    Object object = (Member) session.getAttribute("loginMember");
+    Member follow = (Member)object;
+    Member following = memberService.profileByNo(no);
+
+    Follower follower = new Follower();
+    follower.setFollow(follow.getNo());
+    follower.setFollowing(following.getNo());
+
+    followerService.follow(follower);
+
+    return "feed/feedProfile";
+  }
+
+  @PostMapping("/unfollow")
+  public String unfollow(int no, Model model, HttpSession session) throws Exception {
+
+    Object object = (Member) session.getAttribute("loginMember");
+    Member follow = (Member)object;
+    Member following = memberService.profileByNo(no);
+
+    Follower follower = new Follower();
+    follower.setFollow(follow.getNo());
+    follower.setFollowing(following.getNo());
+
+    followerService.unfollow(follower);
+
+    return "feed/feedProfile";
+  }
+
+
+
 
   @GetMapping("/list")
   public String list(Model model, HttpSession session) throws Exception {
@@ -41,11 +78,19 @@ public class FeedController {
     // 피드 팔로우 기능
     Member member = (Member) session.getAttribute("loginMember");
 
-    List<Follower> followList = followerService.selectFollowList(member.getNo());
-    model.addAttribute("follows", followList);
-
+    if(member != null) {
+      List<Follower> followList = followerService.selectFollowList(member.getNo());
+      model.addAttribute("follows", followList);
+    } else {
+      model.addAttribute("members", memberService.randomList());
+    }
     // 피드 리스트 출력
-    model.addAttribute("feeds", feedService.list());
+    if(member != null) {
+
+      model.addAttribute("feeds", feedService.list());
+    } else {
+      model.addAttribute("feeds", feedService.randomlist());
+    }
 
     return "feed/Feed";
 
@@ -182,11 +227,5 @@ public class FeedController {
     }
     return "redirect:detail?no=" + feed.getNo();
   }
-
-
-
-
-
-
 
 }

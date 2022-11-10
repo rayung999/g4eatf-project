@@ -3,6 +3,7 @@ package com.goteatfproject.appgot.service;
 
 import com.goteatfproject.appgot.dao.FollowerDao;
 import com.goteatfproject.appgot.vo.Follower;
+import com.goteatfproject.appgot.vo.Member;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,18 +17,19 @@ public class DefaultFollowerService implements FollowerService {
 
   @Override
   public void follow(Follower follower) {
-
+  followerDao.follow(follower);
   }
 
   @Override
   public void unfollow(Follower follower) {
-
+  followerDao.unfollow(follower);
   }
 
   @Override
   public int isFollow(Follower follower) {
     return followerDao.isFollow(follower);
   }
+
 
   @Override
   public List<Follower> selectFollowList(int follow) {

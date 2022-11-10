@@ -9,6 +9,8 @@ import java.util.List;
 
 public interface FeedService {
 
+
+  List<Feed> randomlist() throws Exception;
   List<Feed> list() throws Exception;
   void add(Feed feed) throws Exception;
   Feed get(int no) throws Exception;

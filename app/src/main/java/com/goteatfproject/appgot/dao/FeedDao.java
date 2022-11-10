@@ -12,6 +12,8 @@ import java.util.List;
 
 public interface FeedDao {
 
+  List<Feed> randomfindAll();
+
   List<Feed> findAll();
 
   Feed findByNo(int no);

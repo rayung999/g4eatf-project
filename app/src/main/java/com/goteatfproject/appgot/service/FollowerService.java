@@ -2,6 +2,7 @@ package com.goteatfproject.appgot.service;
 
 import com.goteatfproject.appgot.vo.Feed;
 import com.goteatfproject.appgot.vo.Follower;
+import com.goteatfproject.appgot.vo.Member;
 
 import java.util.List;
 
@@ -12,6 +13,8 @@ public interface FollowerService {
   void unfollow(Follower follower) throws Exception;
 
   int isFollow(Follower follower) throws Exception;
+
+//  List<Follower> userList(int follow) throws Exception;
 
   List<Follower> selectFollowList(int follow) throws Exception;
 

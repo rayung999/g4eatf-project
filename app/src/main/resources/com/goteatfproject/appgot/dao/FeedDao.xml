@@ -16,6 +16,9 @@
             <id column="mno" property="no"/>
             <result column="nick" property="nick"/>
             <result column="addr" property="address"/>
+            <result column="nick" property="nick"/>
+            <result column="intro" property="intro"/>
+            <result column="profile" property="profile"/>
         </association>
 
         <collection property="feedAttachedFiles" ofType="feedAttachedFile">
@@ -37,6 +40,25 @@
 
     </resultMap>
 
+    <select id="randomfindAll" resultMap="feedMap">
+        select
+        f.fno,
+        m.mno,
+        m.nick,
+        m.addr,
+        f.title,
+        f.cont,
+        f.date,
+        f.img
+        from
+        feed f
+        join member m on m.mno = f.mno
+        order by rand()
+        Limit 15
+    </select>
+
+
+
 
     <select id="findAll" resultMap="feedMap">
         select
@@ -52,6 +74,7 @@
         feed f
         join member m on m.mno = f.mno
     </select>
+
 
     <select id="findByNo" resultMap="feedMap">
         select
