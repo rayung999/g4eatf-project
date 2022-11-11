@@ -50,8 +50,8 @@ public class DefaultMemberService implements MemberService {
     return memberDao.profileByNo(no);
   }
 
-  public Member profileById(String id) throws Exception {
-    return memberDao.profileById(id);
+  public Member profileByNick(String nick) throws Exception {
+    return memberDao.profileByNick(nick);
   }
 
 }

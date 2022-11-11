@@ -27,7 +27,7 @@ public interface MemberDao {
   List<Member> userList() throws Exception;
 
   // 아이디로 회원 정보 조회 기능 (후에 필요없으면 뺄수도 )
-  Member profileById(String id) throws Exception;
+  Member profileByNick(String nick) throws Exception;
 
   // 유저 번호로 유저 프로필 조회 기능
   Member profileByNo(int no) throws Exception;

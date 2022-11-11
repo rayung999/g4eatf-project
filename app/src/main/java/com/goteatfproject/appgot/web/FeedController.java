@@ -70,10 +70,10 @@ public class FeedController {
 
   // 한 유저의 게시물 출력 홈페이지
   @GetMapping("/personalList")
-  public String personalList(String id, Model model, HttpSession session) throws Exception {
+  public String personalList(String nick, Model model, HttpSession session) throws Exception {
 
     // 아이디로 회원 정보 조회
-    Member member = memberService.profileById(id);
+    Member member = memberService.profileByNick(nick);
 
     // 로그인한 회원 정보 담기
     Object object = session.getAttribute("loginMember");
@@ -98,7 +98,7 @@ public class FeedController {
     List<Follower> followeringList = followerService.selectFollowList(memberNo);
 
     // 사용자 아이디로 사용자 번호를 조회해서 그 번호로 게시물 땡겨옴
-    model.addAttribute("list", feedService.selectListById(id));
+    model.addAttribute("list", feedService.selectListByNick(nick));
     // 사용자 아이디로 회원의 모든 정보 조회하기
     model.addAttribute("member", member);
     // 팔로우 체크 유무
@@ -107,7 +107,7 @@ public class FeedController {
     model.addAttribute("followerList", followerList);
     model.addAttribute("followeringList", followeringList);
 
-    return "feed/Feed";
+    return "feed/profile";
 
   }
 
@@ -125,8 +125,7 @@ public class FeedController {
     }
     // 피드 리스트 출력
     if(loginMember != null) {
-
-      model.addAttribute("feeds", feedService.list());
+      model.addAttribute("followfeeds", feedService.followFindAll(loginMember.getNo()));
     } else {
       model.addAttribute("feeds", feedService.randomlist());
     }

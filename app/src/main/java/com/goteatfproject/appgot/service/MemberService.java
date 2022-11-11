@@ -24,6 +24,6 @@ public interface MemberService {
   // 유저 번호로 유저 프로필 정보 조회
   Member profileByNo(int no) throws Exception;
 
-  Member profileById(String id) throws Exception;
+  Member profileByNick(String nick) throws Exception;
 
 }

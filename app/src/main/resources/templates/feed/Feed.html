@@ -130,8 +130,61 @@
     </div>
 
     <!-- 피드 게시글 스크롤형식 상세보기 블록 -->
-    <th:block th:each="feed : ${feeds}">
-      <div class="posts">
+    <th:block th:if="${session.loginMember != null}">
+      <div class="posts" th:each="feed : ${followfeeds}">
+        <div class="post-title">
+          <div class="post-left">
+            <div class="image">
+              <img src="/images/1.jpg" alt="춘데렐라" width="32" height="32">
+            </div>
+            <div class="details">
+              <p class="name" th:text="${feed.writer.nick}"></p>
+              <p class="location"th:text="${feed.writer.address}"></p>
+            </div>
+          </div>
+          <div class="post-right">
+            <i class="fas fa-ellipsis-h"></i>
+          </div>
+        </div>
+
+        <div class="post-content">
+          <img src="/images/4.jpg" alt="또 할 거 없음" height="600" width="600">
+        </div>
+
+        <div class="post-footer">
+          <div class="like-share-comment">
+            <i class="far fa-heart"></i>
+            <i class="far fa-comment"></i>
+            <i class="far fa-paper-plane"></i>
+          </div>
+          <div class="save">
+            <i class="far fa-bookmark"></i>
+          </div>
+        </div>
+
+        <div class="post-footer-content">
+          <p class="likes">좋아요 100개</p>
+          <p class="name" th:text="${feed.title}"></p>
+          <p class="cont" th:text="${feed.content}"></p>
+          <p class="comments">댓글 10개 모두 보기</p>
+          <p class="posting-time" th:text="${feed.date}"></p>
+        </div>
+
+        <div class="add-comment">
+          <div class="left-side">
+            <i class="far fa-smile-beam"></i>
+            <input type="text" placeholder="댓글 달기...">
+          </div>
+          <div class="right-side">
+            <p>게시</p>
+          </div>
+        </div>
+      </div>
+    </th:block>
+
+
+    <th:block th:if="${session.loginMember == null}">
+      <div class="posts" th:each="feed : ${feeds}">
         <div class="post-title">
           <div class="post-left">
             <div class="image">

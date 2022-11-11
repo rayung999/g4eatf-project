@@ -47,8 +47,13 @@ public class DefaultFeedService implements FeedService {
   }
 
   @Override
-  public List<Feed> selectListById(String id) throws Exception {
-    return feedDao.selectListById(id);
+  public List<Feed> followFindAll(int no) throws Exception {
+    return feedDao.followFindAll(no);
+  }
+
+  @Override
+  public List<Feed> selectListByNick(String nick) throws Exception {
+    return feedDao.selectListByNick(nick);
   }
 
   @Transactional

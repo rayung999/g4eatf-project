@@ -9,8 +9,8 @@ import java.util.List;
 
 public interface FeedService {
 
-
-  List<Feed> selectListById(String id) throws Exception;
+  List<Feed> followFindAll(int no) throws Exception;
+  List<Feed> selectListByNick(String nick) throws Exception;
   List<Feed> randomlist() throws Exception;
   List<Feed> list() throws Exception;
   void add(Feed feed) throws Exception;

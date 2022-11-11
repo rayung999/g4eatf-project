@@ -12,8 +12,10 @@ import java.util.List;
 
 public interface FeedDao {
 
-  List<Feed> selectListById(String id) throws Exception;
+  List<Feed> selectListByNick(String nick) throws Exception;
   List<Feed> randomfindAll() throws Exception;
+
+  List<Feed> followFindAll(int no) throws Exception;
 
   List<Feed> findAll() throws Exception;
 
