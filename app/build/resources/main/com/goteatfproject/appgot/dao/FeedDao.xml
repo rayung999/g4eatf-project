@@ -40,6 +40,9 @@
 
     </resultMap>
 
+
+
+
     <select id="randomfindAll" resultMap="feedMap">
         select
         f.fno,
@@ -58,9 +61,18 @@
     </select>
 
 
+    <select id="simpleProfile" resultMap="feedMap">
+        select
+        mno,
+        nick,
+        addr
+        intro
+        from
+        member
+        where mno=#{writer.no}
+    </select>
 
-<!--   이 부분   ㅈㄹ 문제임 난 빡대갈희   -->
-
+<!--   내가 팔로우한 유저의 게시물 조회 쿼리문   -->
     <select id="followFindAll" resultMap="feedMap">
         select
         f.fno,

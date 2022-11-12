@@ -9,6 +9,7 @@ import java.util.List;
 
 public interface FeedService {
 
+  List<Feed> simpleProfile(int no) throws Exception;
   List<Feed> followFindAll(int no) throws Exception;
   List<Feed> selectListByNick(String nick) throws Exception;
   List<Feed> randomlist() throws Exception;

@@ -19,6 +19,8 @@ public interface FeedDao {
 
   List<Feed> findAll() throws Exception;
 
+  List<Feed> simpleProfile(int no) throws Exception;
+
   Feed findByNo(int no) throws Exception;
 
   int insert(Feed feed) throws Exception;

@@ -71,7 +71,7 @@
         mno,
         nick,
         intro,
-        profile
+        thumbnail
         from member
         order by rand()
         Limit 20
@@ -87,13 +87,13 @@
         gender,
         interest,
         intro
-        profile
+        thumbnail
         from member
         where mno=#{mno}
     </select>
 
-    <!--  회원 이메일로 유저의 정보 조회  -->
-    <select id="profileById" resultMap="memberMap">
+    <!--  회원 닉네임으로 유저의 정보 조회  -->
+    <select id="profileByNick" resultMap="memberMap">
         select
         mno,
         id,
@@ -102,9 +102,9 @@
         gender,
         interest,
         intro
-        profile
+        thumbnail
         from member
-        where id=#{id}
+        where nick=#{nick}
     </select>
 
 </mapper>

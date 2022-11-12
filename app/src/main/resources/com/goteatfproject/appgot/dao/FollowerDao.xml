@@ -10,7 +10,7 @@
         <id column="following" property="following"/>
         <result column="nick" property="nick"/>
         <result column="intro" property="intro"/>
-        <result column="profile" property="profile"/>
+        <result column="thumbnail" property="thumbnail"/>
 
 
     </resultMap>
@@ -42,7 +42,7 @@
         m.mno,
         m.nick,
         m.intro,
-        m.profile
+        m.thumbnail
         from follower F
         join member m on m.mno = F.following
         where follow=#{follow}
@@ -56,7 +56,7 @@
         m.mno,
         m.nick,
         m.intro,
-        m.profile
+        m.thumbnail
         from follower F
         join member m on m.mno = F.follow
         where following=#{following}

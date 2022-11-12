@@ -27,7 +27,7 @@ public class Member {
   private String interest;
   private boolean outState;
   private Date outDate;
-  private String profile;
+  private String thumbnail;
   private String intro;
 
   // 클라이언트 측에서 넘어온 파일 데이터를 저장하기 위한 파라미터 읽기용

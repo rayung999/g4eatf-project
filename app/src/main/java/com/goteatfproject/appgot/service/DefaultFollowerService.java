@@ -2,6 +2,7 @@ package com.goteatfproject.appgot.service;
 
 
 import com.goteatfproject.appgot.dao.FollowerDao;
+import com.goteatfproject.appgot.vo.Feed;
 import com.goteatfproject.appgot.vo.Follower;
 import com.goteatfproject.appgot.vo.Member;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,4 +43,5 @@ public class DefaultFollowerService implements FollowerService {
     List<Follower> selectfollowingList = followerDao.selectFollowingList(following);
     return selectfollowingList;
   }
+
 }

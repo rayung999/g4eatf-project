@@ -42,6 +42,12 @@ public class DefaultFeedService implements FeedService {
   }
 
   @Override
+  public List<Feed> simpleProfile(int no) throws Exception {
+    return feedDao.simpleProfile(no);
+  }
+
+
+  @Override
   public List<Feed> randomlist() throws Exception {
     return feedDao.randomfindAll();
   }

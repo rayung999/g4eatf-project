@@ -17,6 +17,6 @@ public class Follower {
 
   private String intro;
 
-  private String profile;
+  private String thumbnail;
 
 }
