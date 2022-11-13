@@ -2,13 +2,10 @@ package com.goteatfproject.appgot.service;
 
 
 import com.goteatfproject.appgot.dao.FollowerDao;
-import com.goteatfproject.appgot.vo.Feed;
 import com.goteatfproject.appgot.vo.Follower;
-import com.goteatfproject.appgot.vo.Member;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class DefaultFollowerService implements FollowerService {

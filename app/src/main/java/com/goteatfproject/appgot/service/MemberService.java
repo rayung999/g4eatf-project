@@ -1,13 +1,11 @@
 package com.goteatfproject.appgot.service;
 
-import java.util.List;
 import com.goteatfproject.appgot.vo.Member;
+import java.util.List;
 
 public interface MemberService {
 
   void add(Member member) throws Exception;
-
-  boolean update(Member member) throws Exception;
 
   Member get(int no) throws Exception;
 
@@ -25,5 +23,22 @@ public interface MemberService {
   Member profileByNo(int no) throws Exception;
 
   Member profileByNick(String nick) throws Exception;
-
+  
+  // 관리자페이지 전체회원 limit 10;
+  List<Member> MemberList() throws Exception;
+  
+  // 관리자페이지 신규회원 limit 10;
+  List<Member> NewMemberList() throws Exception;
+  
+  // 관리자페이지 회원 상세정보
+  Member getMemberDetail(int no) throws Exception;
+  
+  // 관리자페이지 회원리스트 정보검색
+  List<Member> getSearchMember(String keyword);
+  
+  // 마이페이지 현재 패스워드 확인
+  int getCurrentPasswordCheck(int no, String password);
+  
+  // 마이페이지 회원정보 수정
+  boolean update(Member member) throws Exception;
 }

@@ -3,79 +3,58 @@ package com.goteatfproject.appgot.web;
 import com.goteatfproject.appgot.service.FeedService;
 import com.goteatfproject.appgot.service.FollowerService;
 import com.goteatfproject.appgot.service.MemberService;
-import com.goteatfproject.appgot.vo.*;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.Part;
+import com.goteatfproject.appgot.vo.Feed;
+import com.goteatfproject.appgot.vo.FeedAttachedFile;
+import com.goteatfproject.appgot.vo.Follower;
+import com.goteatfproject.appgot.vo.Member;
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.UUID;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.Part;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.servlet.http.HttpSession;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 @Controller
 @RequestMapping("/feed")
 public class FeedController {
 
   FeedService feedService;
+
   ServletContext sc;
+
   FollowerService followerService;
+
   MemberService memberService;
 
-  public FeedController(
-      FeedService feedService, ServletContext sc, FollowerService followerService, MemberService memberService) {
+  public FeedController(FeedService feedService, ServletContext sc, FollowerService followerService,
+      MemberService memberService) {
     System.out.println("FeedController() 호출됨!");
-    System.out.println("ServletContext() 호출됨!!");
     this.feedService = feedService;
     this.sc = sc;
     this.followerService = followerService;
     this.memberService = memberService;
   }
 
-//  @PostMapping("/personal")
-//  public String follow(int no, Model model, HttpSession session) throws Exception {
-//
-//    Object object = session.getAttribute("loginMember");
-//    Member follow = (Member)object;
-//    Member following = memberService.profileByNo(no);
-//
-//    Follower follower = new Follower();
-//    follower.setFollow(follow.getNo());
-//    follower.setFollowing(following.getNo());
-//
-//    followerService.follow(follower);
-//
-//    return "feed/personal";
-//  }
-//
-//  @PostMapping("/personal")
-//  public String unfollow(int no, Model model, HttpSession session) throws Exception {
-//
-//    Object object = session.getAttribute("loginMember");
-//    Member follow = (Member)object;
-//    Member following = memberService.profileByNo(no);
-//
-//    Follower follower = new Follower();
-//    follower.setFollow(follow.getNo());
-//    follower.setFollowing(following.getNo());
-//
-//    followerService.unfollow(follower);
-//
-//    return "feed/personal";
-//  }
-
-
   @GetMapping("/personal")
   public String personalList(String nick, Model model, HttpSession session) throws Exception {
     // 한 유저의 게시물 출력 홈페이지
-
+    System.out.println(nick);
     // 아이디로 회원 정보 조회
     Member member = memberService.profileByNick(nick);
-
+    System.out.println(member);
     // 로그인한 회원 정보 담기
     Object object = session.getAttribute("loginMember");
     Member loginMember = (Member)object;
@@ -108,21 +87,8 @@ public class FeedController {
     model.addAttribute("followerList", followerList);
     model.addAttribute("followeringList", followeringList);
 
-    return "feed/personal";
+    return "feed/feedPersonal";
 
-
-    //  @GetMapping("/list")
-//  public String test(HttpSession session, Model model) throws Exception {
-//
-//    Member loginMember = (Member)session.getAttribute("loginMember");
-//
-//    System.out.println("loginMember  숫자 = " + loginMember);
-//
-//    model.addAttribute("tests", feedService.simpleProfile(loginMember.getNo()));
-//
-//    System.out.println("model = " + model.getAttribute("tests"));
-//    return "feed/Feed";
-//  }
   }
 
   @GetMapping("/list")
@@ -150,25 +116,28 @@ public class FeedController {
       model.addAttribute("simples", feedService.simpleProfile(loginMember.getNo()));
     } else {} // -> 로그인을 안했으면 css 히든 넣기 -> 근데 방법을 모름
 
-    return "/feed/Feed";
+    return "feed/feedList";
   }
 
   @GetMapping("/form")
-  public void form() throws Exception {
-  }
+    public String form() throws Exception {
+      return "feed/feedForm";
+    }
+
 
   @PostMapping("/add")
   public String feedAdd(Feed feed, HttpSession session,
-                        @RequestParam("files") MultipartFile[] files) throws Exception {
+      @RequestParam("files") MultipartFile[] files) throws Exception {
 
     feed.setFeedAttachedFiles(saveFeedAttachedFiles(files));
     feed.setWriter((Member) session.getAttribute("loginMember"));
 
-    System.out.println("filename = " + Arrays.toString(files));
-    System.out.println("filename2 = " + files);
+//    List<FeedAttachedFile> feedAttachedFiles = new ArrayList<>();
+//    feedAttachedFiles = feed.getFeedAttachedFiles();
+//    feed.setImage(feedAttachedFiles.);
 
     feedService.add(feed);
-    return "/feed/Feed";
+    return "redirect:list";
   }
 
   private List<FeedAttachedFile> saveFeedAttachedFiles(Part[] files)
@@ -192,15 +161,10 @@ public class FeedController {
     List<FeedAttachedFile> feedAttachedFiles = new ArrayList<>();
     String dirPath = sc.getRealPath("/feed/files");
 
-
     for (MultipartFile part : files) {
       if (part.isEmpty()) {
         continue;
       }
-
-      System.out.println("filename3 = " + Arrays.toString(files));
-      System.out.println("filename4 = " + files);
-      System.out.println("dirPath = " + dirPath);
 
       String filename = UUID.randomUUID().toString();
       part.transferTo(new File(dirPath + "/" + filename));
@@ -226,7 +190,7 @@ public class FeedController {
   // 파티 게시물 수정
   @PostMapping("update")
   public String update(Feed feed, HttpSession session,
-                       Part[] files) throws Exception {
+      Part[] files) throws Exception {
 
     feed.setFeedAttachedFiles(saveFeedAttachedFiles(files));
 
@@ -237,7 +201,7 @@ public class FeedController {
     if (!feedService.update(feed)) {
       throw new Exception("게시글을 변경할 수 없습니다.");
     }
-    return "/feed/Feed";
+    return "feed/feedList";
   }
 
   private void checkOwner(int feedNo, HttpSession session) throws Exception {
@@ -254,7 +218,7 @@ public class FeedController {
     if (!feedService.delete(no)) {
       throw new Exception("게시글을 삭제할 수 없습니다.");
     }
-    return "/feed/Feed";
+    return "feed/feedList";
   }
 
   @GetMapping("fileDelete")

@@ -1,9 +1,6 @@
 package com.goteatfproject.appgot.service;
 
-import com.goteatfproject.appgot.vo.Feed;
 import com.goteatfproject.appgot.vo.Follower;
-import com.goteatfproject.appgot.vo.Member;
-
 import java.util.List;
 
 public interface FollowerService {

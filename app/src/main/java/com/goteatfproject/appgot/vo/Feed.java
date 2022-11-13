@@ -2,14 +2,11 @@ package com.goteatfproject.appgot.vo;
 
 import java.util.Date;
 import java.util.List;
-
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-@Getter
-@Setter
-@ToString(exclude = "fileData")
+@Getter @Setter @ToString
 public class Feed {
 
   private int no;
@@ -20,6 +17,6 @@ public class Feed {
 
   private Member writer;
 
+  // 추가
   private List<FeedAttachedFile> feedAttachedFiles;
-
 }

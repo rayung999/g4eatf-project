@@ -39,5 +39,4 @@ public class Member {
   private long profileSize;
   private String profileContentType;
 
-
 }

@@ -1,9 +1,10 @@
 package com.goteatfproject.appgot.dao;
 
-import com.goteatfproject.appgot.vo.AttachedFile;
+import com.goteatfproject.appgot.vo.Criteria;
 import com.goteatfproject.appgot.vo.Feed;
 import com.goteatfproject.appgot.vo.FeedAttachedFile;
 import com.goteatfproject.appgot.vo.Party;
+import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -12,33 +13,34 @@ import java.util.List;
 
 public interface FeedDao {
 
-  List<Feed> selectListByNick(String nick) throws Exception;
-  List<Feed> randomfindAll() throws Exception;
+  List<Feed> findAll();
 
-  List<Feed> followFindAll(int no) throws Exception;
+  int insert(Feed feed);
 
-  List<Feed> findAll() throws Exception;
+  List<Map<String, Object>> selectFeedList(Criteria cri);
 
-  List<Feed> simpleProfile(int no) throws Exception;
+  // 추가
+  List<Feed> selectListByNick(String nick);
+  List<Feed> randomfindAll();
 
-  Feed findByNo(int no) throws Exception;
+  List<Feed> followFindAll(int no);
+  List<Feed> simpleProfile(int no);
 
-  int insert(Feed feed) throws Exception;
+  Feed findByNo(int no);
 
-  int update(Feed feed) throws Exception;
+  int update(Feed feed);
 
-  int delete(int no) throws Exception;
+  int delete(int no);
 
-  int insertFiles(Feed feed) throws Exception;
+  int insertFiles(Feed feed);
 
-  FeedAttachedFile findFileByNo(int fileNo) throws Exception;
+  FeedAttachedFile findFileByNo(int fileNo);
 
-  List<FeedAttachedFile> findFilesByParty(int feedNo) throws Exception;
+  List<FeedAttachedFile> findFilesByParty(int feedNo);
 
-  int deleteFile(int fileNo) throws Exception;
+  int deleteFile(int fileNo);
 
-  int deleteFiles(int feedNo) throws Exception;
+  int deleteFiles(int feedNo);
 
-  int deleteFilesByMemberFeeds(int memberNo) throws Exception;
+  int deleteFilesByMemberFeeds(int memberNo);
 }
-
