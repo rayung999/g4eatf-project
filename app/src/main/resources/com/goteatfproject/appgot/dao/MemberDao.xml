@@ -68,6 +68,7 @@
       name=#{name},
       id=#{id},
       nick=#{nick},
+      intro=#{intro},
       pwd=sha2(#{password},256)
     where
       mno=#{no}
@@ -101,7 +102,7 @@
     birth,
     gender,
     interest,
-    intro
+    intro,
     thumbnail
     from member
     where mno=#{mno}
