@@ -98,7 +98,7 @@
           <a class="nav-link" th:href="@{/feed/list}">피드게시판</a>
         </li>
         <li class="nav-item p-1">
-          <a class="nav-link" href="#">이벤트게시판</a>
+          <a class="nav-link" th:href="@{/event/list}">이벤트게시판</a>
         </li>
         <li class="nav-item dropdown p-1">
           <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"
@@ -136,7 +136,8 @@
           <div class="col-12">
             <input name="following" data-th-value="${session.loginMember.no}" type="hidden">
             <input name="follow" data-th-value="${session.loginMember.no}" type="hidden">
-            <button type="button" id="follow-btn" th:value="${member.no}" class="btn btn-primary btn-lg">팔로우 하기</button>
+            <button data-th-if="${followCheck} == 1" type="button" id="unfollow-btn" th:value="${member.no}" class="btn btn-primary btn-lg">언팔로우 하기</button>
+            <button data-th-if="${followCheck} == 0" type="button" id="follow-btn" th:value="${member.no}" class="btn btn-primary btn-lg">팔로우 하기</button>
           </div>
         </form>
         <div class="line-2"></div>
@@ -263,23 +264,23 @@ $("#follow-btn").click(
               },
               success: function() {
                 console.log("success");
-                c();
+                // c();
               }
             });
           }
         }
 );
 
-function c() {
-  if (toggle == 0) {
-    $("#follow-btn").text("언팔로우 하기");
-    toggle = 1;
-  }
-  if (toggle == 1) {
-    $("#follow-btn").text("팔로우 하기");
-    toggle = 0;
-  }
-}
+// function c() {
+//   if (toggle == 0) {
+//     $("#follow-btn").text("언팔로우 하기");
+//     toggle = 1;
+//   }
+//   if (toggle == 1) {
+//     $("#follow-btn").text("팔로우 하기");
+//     toggle = 0;
+//   }
+// }
 </script>
 
 

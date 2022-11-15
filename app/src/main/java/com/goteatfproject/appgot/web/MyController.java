@@ -7,16 +7,18 @@ import com.goteatfproject.appgot.vo.Criteria;
 import com.goteatfproject.appgot.vo.Member;
 import com.goteatfproject.appgot.vo.PageMaker;
 import com.goteatfproject.appgot.vo.Party;
+
+import java.io.File;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
 import org.springframework.boot.Banner.Mode;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -26,13 +28,16 @@ public class MyController {
   PartyService partyService;
   FeedService feedService;
   MemberService memberService;
+  ServletContext sc;
   
   public MyController(PartyService partyService, FeedService feedService,
-      MemberService memberService) {
+      MemberService memberService, ServletContext sc) {
     this.partyService = partyService;
     this.feedService = feedService;
     this.memberService = memberService;
+    this.sc = sc;
   }
+
   
   // 마이페이지
   @GetMapping("/main")
@@ -117,6 +122,34 @@ public class MyController {
   public String updateMember(Member member) throws Exception {
     System.out.println("member = " + member);
     memberService.update(member);
+    System.out.println("회원정보 수정 완료");
+    return "redirect:/my/main";
+  }
+
+  @PostMapping("/updateProfile")
+  public String updateProfile(@RequestParam("files") MultipartFile files, HttpSession session) throws Exception {
+    Member member = (Member) session.getAttribute("loginMember");
+    if (!files.isEmpty()) {
+      String dirPath = sc.getRealPath("/member/files");
+      String filename = UUID.randomUUID().toString();
+      files.transferTo(new File(dirPath + "/" + filename));
+
+      member.setThumbnail(filename);
+      memberService.updateProfile(member);
+      return "redirect:/my/main";
+    } else {
+      return "redirect:/my/myProfile";
+    }
+  }
+
+  @PostMapping("/updateIntro")
+  public String updateIntro(String intro, HttpSession session) throws Exception {
+    Member member = (Member) session.getAttribute("loginMember");
+
+    member.setIntro(intro);
+
+    memberService.updateIntro(member);
+    System.out.println("member = " + member);
     System.out.println("회원정보 수정 완료");
     return "redirect:/my/main";
   }
