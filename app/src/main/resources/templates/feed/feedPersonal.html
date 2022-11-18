@@ -271,6 +271,27 @@ $("#follow-btn").click(
         }
 );
 
+
+$("#unfollow-btn").click(
+        () => {
+          followValue = $("#unfollow-btn").val();
+          if (followValue != "") {
+            console.log(followValue);
+            $.ajax({
+              type:"get",
+              url:"/feed/personal-ajax",
+              data: {
+                followNo: followValue
+              },
+              success: function() {
+                console.log("success");
+                // c();
+              }
+            });
+          }
+        }
+);
+
 // function c() {
 //   if (toggle == 0) {
 //     $("#follow-btn").text("언팔로우 하기");
@@ -281,6 +302,7 @@ $("#follow-btn").click(
 //     toggle = 0;
 //   }
 // }
+
 </script>
 
 
