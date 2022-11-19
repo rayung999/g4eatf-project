@@ -190,16 +190,15 @@
 
           <div class="post-content">
             <a th:href="@{personal(nick=${member.nick})}"><img id="thumbNail"
-                                                     th:src="@{/feed/files/{path}(path=${personal.thumbnail})}"
-                                                     class="img-thumbnail" alt="이미지가 없습니다." height="600" width="600">
+                                                               th:src="@{/feed/files/{path}(path=${personal.thumbnail})}"
+                                                               class="img-thumbnail" alt="이미지가 없습니다." height="600" width="600">
             </a>
           </div>
-
           <div class="post-footer">
             <div class="like-share-comment">
-              <i class="far fa-heart"></i>
-              <i class="far fa-comment"></i>
-              <i class="far fa-paper-plane"></i>
+              <span hidden class="checkLike" data-th-text="${personal.checkLike}"></span>
+              <i class="bi bi-heart feedLikeBtn" data-th-id="'heart' + ${personal.no}" value="0"></i>
+              <p class="likes" data-th-id="'likes' + ${personal.no}" th:text="${personal.likeCnt}">좋아요 100개</p>
             </div>
             <div class="save">
               <i class="far fa-bookmark"></i>
@@ -207,7 +206,6 @@
           </div>
 
           <div class="post-footer-content">
-            <p class="likes">좋아요 100개</p>
             <p class="name" th:text="${personal.title}"></p>
             <p class="cont" th:text="${personal.content}"></p>
             <p class="comments">댓글 10개 모두 보기</p>
@@ -225,13 +223,69 @@
       </th:block>
     </div>
   </div>
-
-
 </div>
 </div>
 
 
+<script>
+  $(document).ready(function () {
 
+
+    let checkLikes = document.querySelectorAll(".checkLike");
+    checkLikes.forEach(function (checkLike) {
+      console.log(checkLike.innerHTML);
+      console.log(checkLike.nextElementSibling);
+
+      if (checkLike.innerHTML == "is") {
+        console.log("is if문 들어움");
+        checkLike.nextElementSibling.className = 'bi feedLikeBtn bi-heart-fill text-danger';
+      } else if (checkLike.innerHTML == "not") {
+        console.log("not 문 들어움");
+        checkLike.nextElementSibling.className = 'bi feedLikeBtn bi-heart';
+      }
+    })
+
+    let feedHeartBtns = document.querySelectorAll(".feedLikeBtn");
+    feedHeartBtns.forEach(function (btn) {
+
+      btn.addEventListener("click", function () {
+        const heart = $(this).attr("value");
+        const feedId = $(this).attr("id");
+        let [a, feedNo] = feedId.split('t');
+        console.log(feedNo)
+
+
+        $.ajax({
+          url: '/feed/heart',
+          type: 'POST',
+          context: this,
+          data: {'feedNo': feedNo, 'heart': heart},
+          success: function (result) {
+            alert("success")
+            console.log(result);
+
+            $(this).attr("value", result.heart);
+            if (result.heart == 1) {
+              $(this).removeClass("bi-heart");
+              $(this).addClass("bi-heart-fill");
+              $(this).addClass("text-danger");
+            } else {
+              $(this).addClass("bi-heart");
+              $(this).removeClass("bi-heart-fill");
+              $(this).removeClass("text-danger");
+            }
+            console.log($(this).next('p'));
+            console.log(result.count);
+            $(this).next().text(result.count);
+
+          },
+          error: function () {
+          }
+        });
+      })
+    });
+  });
+</script>
 
 
 
@@ -247,62 +301,60 @@
 
 <script>
 
-let followValue = "";
-let toggle = 0;
+  let followValue = "";
+  let toggle = 0;
 
 
-$("#follow-btn").click(
-        () => {
-          followValue = $("#follow-btn").val();
-          if (followValue != "") {
-            console.log(followValue);
-            $.ajax({
-              type:"get",
-              url:"/feed/personal-ajax",
-              data: {
-                followNo: followValue
-              },
-              success: function() {
-                console.log("success");
-                // c();
-              }
-            });
+  $("#follow-btn").click(
+          () => {
+            followValue = $("#follow-btn").val();
+            if (followValue != "") {
+              console.log(followValue);
+              $.ajax({
+                type:"get",
+                url:"/feed/personal-ajax",
+                data: {
+                  followNo: followValue
+                },
+                success: function() {
+                  console.log("success");
+                  // c();
+                }
+              });
+            }
           }
-        }
-);
-
-
-$("#unfollow-btn").click(
-        () => {
-          followValue = $("#unfollow-btn").val();
-          if (followValue != "") {
-            console.log(followValue);
-            $.ajax({
-              type:"get",
-              url:"/feed/personal-ajax",
-              data: {
-                followNo: followValue
-              },
-              success: function() {
-                console.log("success");
-                // c();
-              }
-            });
+  );
+  $("#unfollow-btn").click(
+          () => {
+            followValue = $("#unfollow-btn").val();
+            if (followValue != "") {
+              console.log(followValue);
+              $.ajax({
+                type:"get",
+                url:"/feed/personal-ajax",
+                data: {
+                  followNo: followValue
+                },
+                success: function() {
+                  console.log("success");
+                  // c();
+                }
+              });
+            }
           }
-        }
-);
+  );
 
-// function c() {
-//   if (toggle == 0) {
-//     $("#follow-btn").text("언팔로우 하기");
-//     toggle = 1;
-//   }
-//   if (toggle == 1) {
-//     $("#follow-btn").text("팔로우 하기");
-//     toggle = 0;
-//   }
-// }
 
+  // function c() {
+  //   if (toggle == 0) {
+  //     $("#follow-btn").text("언팔로우 하기");
+  //     toggle = 1;
+  //   }
+  //   if (toggle == 1) {
+  //     $("#follow-btn").text("팔로우 하기");
+  //     toggle = 0;
+  //   }
+  // }
 </script>
 
 

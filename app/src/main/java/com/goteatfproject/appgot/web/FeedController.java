@@ -1,5 +1,6 @@
 package com.goteatfproject.appgot.web;
 
+import com.goteatfproject.appgot.service.FeedLikeService;
 import com.goteatfproject.appgot.service.FeedService;
 import com.goteatfproject.appgot.service.FollowerService;
 import com.goteatfproject.appgot.service.MemberService;
@@ -11,15 +12,14 @@ import java.util.*;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.Part;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 @Controller
@@ -33,47 +33,50 @@ public class FeedController {
   FollowerService followerService;
 
   MemberService memberService;
+  @Autowired
+  FeedLikeService feedLikeService;
 
   public FeedController(FeedService feedService, ServletContext sc, FollowerService followerService,
-      MemberService memberService) {
+                        MemberService memberService, FeedLikeService feedLikeService) {
     System.out.println("FeedController() 호출됨!");
     this.feedService = feedService;
     this.sc = sc;
     this.followerService = followerService;
     this.memberService = memberService;
+    this.feedLikeService = feedLikeService;
   }
 
-  //  @PostMapping("/personal")
-//  public String follow(int no, Model model, HttpSession session) throws Exception {
-//
-//    Object object = session.getAttribute("loginMember");
-//    Member follow = (Member)object;
-//    Member following = memberService.profileByNo(no);
-//
-//    Follower follower = new Follower();
-//    follower.setFollow(follow.getNo());
-//    follower.setFollowing(following.getNo());
-//
-//    followerService.follow(follower);
-//
-//    return "feed/personal";
-//  }
-//
-//  @PostMapping("/personal")
-//  public String unfollow(int no, Model model, HttpSession session) throws Exception {
-//
-//    Object object = session.getAttribute("loginMember");
-//    Member follow = (Member)object;
-//    Member following = memberService.profileByNo(no);
-//
-//    Follower follower = new Follower();
-//    follower.setFollow(follow.getNo());
-//    follower.setFollowing(following.getNo());
-//
-//    followerService.unfollow(follower);
-//
-//    return "feed/personal";
-//  }
+  @ResponseBody
+  @PostMapping("/heart")
+  public Map<String, Integer> heart(@RequestParam("feedNo") int feedNo, @RequestParam("heart") int heart, HttpSession session, Model model) throws Exception {
+
+    Member member = (Member) session.getAttribute("loginMember");
+    Feed feed = feedService.get(feedNo);
+
+    FeedLike feedLike = new FeedLike();
+
+    feedLike.setFeed(feedService.get(feedNo));
+    feedLike.setMember(memberService.get(member.getNo()));
+
+    System.out.println(heart);
+
+    if(heart >= 1) {
+      feedLikeService.deleteLike(member, feed);
+      heart=0;
+    } else {
+      feedLikeService.insertLike(member, feed);
+      heart=1;
+    }
+
+    int count = feedLikeService.getLike(member, feed);
+
+    Map<String, Integer> map = new HashMap<>();
+    map.put("feedNo", feedNo);
+    map.put("count", count);
+    map.put("heart", heart);
+    return map;
+
+  }
 
   @GetMapping("/personal")
   public String personalList(String nick, Model model, HttpSession session) throws Exception {
@@ -104,12 +107,37 @@ public class FeedController {
     // 내가 팔로우하는 사람들의 목록
     List<Follower> followeringList = followerService.selectFollowList(memberNo);
 
+    FeedLike feedLike = new FeedLike();
+    feedLike.setMember(loginMember);
+
+    int likeCheck = feedLikeService.isLike(feedLike);
+
+    List<Feed> feedList = feedService.selectListByNick(nick);
+
+    List<Feed> feedList2 = new ArrayList<>();
+
+    for (Feed feed : feedList) {
+      feed.setLikeCnt(feedLikeService.getLike(member, feed));
+      for (FeedLike feedLikeList : feed.getFeedLikeList()) {
+        if (feedLikeList.getFlmno() == loginMember.getNo()) {
+          feed.setCheckLike("is");
+          break;
+        } else {
+          feed.setCheckLike("not");
+        }
+
+      }
+      feedList2.add(feed);
+    }
+
     // 사용자 아이디로 사용자 번호를 조회해서 그 번호로 게시물 땡겨옴
-    model.addAttribute("list", feedService.selectListByNick(nick));
+    model.addAttribute("list", feedList2);
     // 사용자 아이디로 회원의 모든 정보 조회하기
     model.addAttribute("member", member);
     // 팔로우 체크 유무
     model.addAttribute("followCheck", followCheck);
+    // 좋아요 체크 유무
+    model.addAttribute("likeCheck", likeCheck);
 
     model.addAttribute("followerList", followerList);
     model.addAttribute("followeringList", followeringList);
@@ -120,9 +148,9 @@ public class FeedController {
 
   @GetMapping("/personal-ajax")
   public String personalajax(int followNo, Model model, HttpSession session) throws Exception {
+
     System.out.println(followNo);
-    Object object = session.getAttribute("loginMember");
-    Member follow = (Member)object;
+    Member follow = (Member)session.getAttribute("loginMember");
     Member following = memberService.profileByNo(followNo);
 
     Follower follower = new Follower();
@@ -141,7 +169,7 @@ public class FeedController {
   }
 
   @GetMapping("/list")
-  public String list(Model model, HttpSession session) throws Exception {
+  public String list(String nick, Model model, HttpSession session) throws Exception {
 
     Member loginMember = (Member) session.getAttribute("loginMember");
 
@@ -156,7 +184,31 @@ public class FeedController {
 
     // 피드 리스트 출력
     if(loginMember != null) {
-      model.addAttribute("followfeeds", feedService.followFindAll(loginMember.getNo()));
+
+      FeedLike feedLike = new FeedLike();
+      feedLike.setMember(loginMember);
+
+      int likeCheck = feedLikeService.isLike(feedLike);
+
+      List<Feed> followfeeds = feedService.followFindAll(loginMember.getNo());
+      List<Feed> followfeeds2 = new ArrayList<>();
+
+      for (Feed feed : followfeeds) {
+        feed.setLikeCnt(feedLikeService.getLike(loginMember, feed));
+        for (FeedLike feedLikeList : feed.getFeedLikeList()) {
+          if (feedLikeList.getFlmno() == loginMember.getNo()) {
+            feed.setCheckLike("is");
+            break;
+          } else {
+            feed.setCheckLike("not");
+          }
+
+        }
+        followfeeds2.add(feed);
+      }
+      model.addAttribute("likeCheck", likeCheck);
+      model.addAttribute("followfeeds", followfeeds2);
+
     } else {
       model.addAttribute("feeds", feedService.randomlist());
     }
@@ -170,14 +222,14 @@ public class FeedController {
   }
 
   @GetMapping("/form")
-    public String form() throws Exception {
-      return "feed/feedForm";
-    }
+  public String form() throws Exception {
+    return "feed/feedForm";
+  }
 
 
   @PostMapping("/add")
   public String feedAdd(Feed feed, HttpSession session,
-      @RequestParam("files") MultipartFile[] files) throws Exception {
+                        @RequestParam("files") MultipartFile[] files) throws Exception {
 
     // thumbnail default 파일 설정 TODO 추가1
     feed.setThumbnail("logo.png");
@@ -252,7 +304,7 @@ public class FeedController {
   // 파티 게시물 수정
   @PostMapping("update")
   public String update(Feed feed, HttpSession session,
-      Part[] files) throws Exception {
+                       Part[] files) throws Exception {
 
     feed.setFeedAttachedFiles(saveFeedAttachedFiles(files));
 
@@ -263,7 +315,7 @@ public class FeedController {
     if (!feedService.update(feed)) {
       throw new Exception("게시글을 변경할 수 없습니다.");
     }
-    return "feed/feedList";
+    return "feed/feedPersonal";
   }
 
   private void checkOwner(int feedNo, HttpSession session) throws Exception {
@@ -280,7 +332,7 @@ public class FeedController {
     if (!feedService.delete(no)) {
       throw new Exception("게시글을 삭제할 수 없습니다.");
     }
-    return "feed/feedList";
+    return "feed/feedPersonal";
   }
 
   @GetMapping("fileDelete")

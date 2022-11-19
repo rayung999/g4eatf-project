@@ -14,6 +14,10 @@
         href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
   <link href="/css/style.css" rel="stylesheet">
 
+  <script src="https://code.jquery.com/jquery-3.6.1.js"
+          integrity="sha256-3zlB5s2uwoUzrXK3BT7AX3FyvojsraNFxCc2vC/7pNI="
+          crossorigin="anonymous"></script>
+
 </head>
 
 <body>
@@ -149,15 +153,15 @@
     </div>
 
     <div class="col-3 ">
-        <th:block th:if="${session.loginMember != null}">
-      <div class="story">
+      <th:block th:if="${session.loginMember != null}">
+        <div class="story">
           <div class="stories" th:each="member : ${members}">
             <a th:href="@{/feed/personal(nick=${member.nick})}"><img src="/images/1.jpg" width="60" height="60" alt="fff"></a>
             <p th:text="${member.nick}"></p>
           </div>
         </div>
-        </th:block>
-      </div>
+      </th:block>
+    </div>
 
 
   </div>
@@ -187,16 +191,16 @@
 
           <div class="post-content">
             <a th:href="@{list(no=${feed.no})}"><img id="thumbNail"
-                                                        th:src="@{/feed/files/{path}(path=${feed.thumbnail})}"
-                                                        class="img-thumbnail" alt="이미지가 없습니다." height="600" width="600">
+                                                     th:src="@{/feed/files/{path}(path=${feed.thumbnail})}"
+                                                     class="img-thumbnail" alt="이미지가 없습니다." height="600" width="600">
             </a>
           </div>
 
           <div class="post-footer">
             <div class="like-share-comment">
-              <i class="far fa-heart"></i>
-              <i class="far fa-comment"></i>
-              <i class="far fa-paper-plane"></i>
+              <span hidden class="checkLike" data-th-text="${feed.checkLike}"></span>
+              <i class="bi bi-heart feedLikeBtn" data-th-id="'heart' + ${feed.no}" value="0"></i>
+              <p class="likes" data-th-id="'likes' + ${feed.no}" th:text="${feed.likeCnt}">좋아요 100개</p>
             </div>
             <div class="save">
               <i class="far fa-bookmark"></i>
@@ -204,7 +208,6 @@
           </div>
 
           <div class="post-footer-content">
-            <p class="likes">좋아요 100개</p>
             <p class="name" th:text="${feed.title}"></p>
             <p class="cont" th:text="${feed.content}"></p>
             <p class="comments">댓글 10개 모두 보기</p>
@@ -247,9 +250,8 @@
 
           <div class="post-footer">
             <div class="like-share-comment">
-              <i class="far fa-heart"></i>
-              <i class="far fa-comment"></i>
-              <i class="far fa-paper-plane"></i>
+              <i class="bi bi-heart feedLikeBtn" data-th-id="'heart' + ${feed.no}" value="0"></i>
+              <p class="likes" th:text="${feed.likeCnt}">좋아요 100개</p>
             </div>
             <div class="save">
               <i class="far fa-bookmark"></i>
@@ -257,7 +259,6 @@
           </div>
 
           <div class="post-footer-content">
-            <p class="likes">좋아요 100개</p>
             <p class="name" th:text="${feed.title}"></p>
             <p class="cont" th:text="${feed.content}"></p>
             <p class="comments">댓글 10개 모두 보기</p>
@@ -322,33 +323,88 @@
           </div>
         </div>
 
-        </div>
+      </div>
 
-        <div class="line-3"></div>
+      <div class="line-3"></div>
 
-        <div class="row">
-          <div class="col  align-items-center">
-            <a onclick="location.href='/../feed/form'" class="btn btn-primary" role="button" data-bs-toggle="button">게시글 작성하기</a>
-          </div>
+      <div class="row">
+        <div class="col  align-items-center">
+          <a onclick="location.href='/../feed/form'" class="btn btn-primary" role="button" data-bs-toggle="button">게시글 작성하기</a>
         </div>
       </div>
     </div>
   </div>
+</div>
+
+<script>
+  $(document).ready(function () {
+
+
+    let checkLikes = document.querySelectorAll(".checkLike");
+    checkLikes.forEach(function (checkLike) {
+      console.log(checkLike.innerHTML);
+      console.log(checkLike.nextElementSibling);
+
+      if (checkLike.innerHTML == "is") {
+        console.log("is 들어움");
+        checkLike.nextElementSibling.className = 'bi feedLikeBtn bi-heart-fill text-danger';
+      } else if (checkLike.innerHTML == "not") {
+        console.log("not 들어움");
+        checkLike.nextElementSibling.className = 'bi feedLikeBtn bi-heart';
+      }
+    })
+
+    let feedHeartBtns = document.querySelectorAll(".feedLikeBtn");
+    feedHeartBtns.forEach(function (btn) {
+
+      btn.addEventListener("click", function () {
+        const heart = $(this).attr("value");
+        const feedId = $(this).attr("id");
+        let [a, feedNo] = feedId.split('t');
+        console.log(feedNo)
+
+
+        $.ajax({
+          url: '/feed/heart',
+          type: 'POST',
+          context: this,
+          data: {'feedNo': feedNo, 'heart': heart},
+          success: function (result) {
+            alert("success")
+            console.log(result);
+
+            $(this).attr("value", result.heart);
+            if (result.heart == 1) {
+              $(this).removeClass("bi-heart");
+              $(this).addClass("bi-heart-fill");
+              $(this).addClass("text-danger");
+            } else {
+              $(this).addClass("bi-heart");
+              $(this).removeClass("bi-heart-fill");
+              $(this).removeClass("text-danger");
+            }
+            console.log($(this).next('f'));
+            console.log(result.count);
+            $(this).next().text(result.count);
+
+          },
+          error: function () {
+          }
+        });
+      })
+    });
+  });
+</script>
 
 
 
 
 
 
-
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
-          integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
-          crossorigin="anonymous">
-
-
-
-
-  </script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+        crossorigin="anonymous">
+</script>
 
 </body>
 </html>

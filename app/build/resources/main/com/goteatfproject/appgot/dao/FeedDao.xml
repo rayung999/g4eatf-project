@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper
-    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.goteatfproject.appgot.dao.FeedDao">
 
   <!-- 자바 객체의 프로퍼티와 컬럼 이름을 연결한다. -->
@@ -11,6 +11,7 @@
     <result column="cont" property="content"/>
     <result column="date" property="date"/>
     <result column="thumbnail" property="thumbnail"/>
+    <result column="likecnt" property="likeCnt"/>
 
     <association property="writer" javaType="member">
       <id column="mno" property="no"/>
@@ -26,6 +27,12 @@
       <result column="filename" property="fileName"/>
       <result column="savename" property="saveName"/>
     </collection>
+
+    <collection property="feedLikeList" ofType="feedLike">
+      <id column="flno" property="flno"/>
+      <result column="flmno" property="flmno"/>
+    </collection>
+
   </resultMap>
 
   <resultMap type="feedAttachedFile" id="feedAttachedFileMap">
@@ -46,14 +53,15 @@
     f.title,
     f.cont,
     f.date,
-    f.thumbnail
+    f.thumbnail,
+    f.likecnt
     from
     feed f
     join member m on m.mno = f.mno
 
   </select>
 
-<!--   페이징 리스트-->
+  <!--   페이징 리스트-->
   <select id="selectFeedList" resultMap="feedMap" parameterType="hashmap">
     <![CDATA[
       select
@@ -64,7 +72,8 @@
     f.title,
     f.cont,
     f.date,
-    f.thumbnail
+    f.thumbnail,
+    f.likecnt
     from
     feed f
     join member m on m.mno = f.mno
@@ -76,7 +85,7 @@
 
 
   <insert id="insert" parameterType="feed"
-      useGeneratedKeys="true" keyColumn="fno" keyProperty="no">
+          useGeneratedKeys="true" keyColumn="fno" keyProperty="no">
     insert into feed(title, cont, mno, date, thumbnail)
     values(#{title}, #{content}, #{writer.no}, now(), #{thumbnail})
   </insert>
@@ -119,7 +128,8 @@
     f.title,
     f.cont,
     f.date,
-    f.thumbnail
+    f.thumbnail,
+    f.likecnt
     from feed f
     join member m on m.mno = f.mno
     where f.mno in
@@ -129,9 +139,20 @@
 
   <!--  아이디로 유저 번호를 조회해서 그번호로 게시물 모두 조회 쿼리문  -->
   <select id="selectListByNick" resultMap="feedMap">
-    select *
+    select
+    f.fno,
+    m.mno,
+    m.nick,
+    m.addr,
+    f.title,
+    f.cont,
+    f.date,
+    f.thumbnail,
+    f.likecnt,
+    fl.mno flmno
     from feed f
     join member m on m.mno=f.mno
+    left join feed_like fl on f.fno=fl.fno
     where m.nick=#{nick}
     order by f.fno desc
   </select>
@@ -145,7 +166,8 @@
     f.title,
     f.cont,
     f.date,
-    f.thumbnail
+    f.thumbnail,
+    f.likecnt,
     ff.feedfileno,
     ff.path
     from
