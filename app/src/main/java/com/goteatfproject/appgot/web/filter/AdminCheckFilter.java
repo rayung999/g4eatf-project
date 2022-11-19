@@ -14,19 +14,19 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AdminCheckFilter implements Filter {
-
+  
   @Override
   public void init(FilterConfig filterConfig) throws ServletException {
     System.out.println("AdminCheckFilter.init() 실행!");
   }
-
+  
   @Override
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
       throws IOException, ServletException {
-
+    
     HttpServletRequest httpRequest = (HttpServletRequest) request;
     HttpServletResponse httpResponse = (HttpServletResponse) response;
-
+    
     System.out.println("AdminCheckFilter.doFilter() 실행!");
     if (httpRequest.getServletPath().startsWith("/admin")) {
       Member loginMember = (Member) httpRequest.getSession().getAttribute("loginMember");
@@ -36,7 +36,7 @@ public class AdminCheckFilter implements Filter {
         return;
       }
     }
-
+    
     chain.doFilter(request, response);
   }
 

@@ -14,12 +14,17 @@ public class Feed {
   private String content;
   private Date date;
   private String thumbnail;
+  private boolean pub;
+
+  // 추가 - 라윤
   private int likeCnt;
   private String checkLike;
 
   private Member writer;
 
+  // 추가 - 라윤
   private List<FeedLike> feedLikeList;
+
   // 추가
   private List<FeedAttachedFile> feedAttachedFiles;
 }

@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
+    <title>Chunderella Eventworld</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css"
           rel="stylesheet"
           integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi"
@@ -63,8 +63,8 @@
                 </a>
 
                 <ul class="dropdown-menu text-small ">
-                    <li th:if="${session.loginMember != null}"><a class="dropdown-item" href="#">New
-                        project...</a></li>
+                    <li th:if="${session.loginMember != null}"><a class="dropdown-item" href="#">New project...</a></li>
+                    <li th:if="${session.loginMember != null}"><a class="dropdown-item" th:href="@{/my/main}">마이페이지</a></li>
                     <li th:if="${session.loginMember != null}"><a class="dropdown-item" href="#">설정</a></li>
                     <li th:if="${session.loginMember != null}"><a class="dropdown-item" href="#">프로필</a></li>
                     <li>
@@ -86,40 +86,8 @@
 <div class="line-3"></div>
 <div class="line-3"></div>
 <!------------------------------nav------------------------------>
-<nav class="navbar navbar-expand-lg border-bottom bg-light" aria-label="Tenth navbar example">
-    <div class="container-fluid">
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                data-bs-target="#navbarsExample08" aria-controls="navbarsExample08"
-                aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class="collapse navbar-collapse justify-content-md-center " id="navbarsExample08">
-            <ul class="navbar-nav fw-bold text-dark ">
-                <li class="nav-item p-1">
-                    <a class="nav-link" aria-current="page" th:href="@{/party/partyList}">파티게시판</a>
-                </li>
-                <li class="nav-item p-1">
-                    <a class="nav-link" th:href="@{/feed/list}">피드게시판</a>
-                </li>
-                <li class="nav-item p-1">
-                    <a class="nav-link" href="#">이벤트게시판</a>
-                </li>
-                <li class="nav-item dropdown p-1">
-                    <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"
-                       aria-expanded="false">고객센터</a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" th:href="@{/notice/list}">공지사항</a></li>
-                        <li th:if="${session.loginMember != null}"><a class="dropdown-item"
-                                                                      th:href="@{/my/main}">마이페이지</a></li>
-                        <li><a class="dropdown-item" th:href="@{/notice/noticeOne}">1:1 문의</a></li>
-                        <li><a class="dropdown-item" href="#">자주 묻는 질문</a></li>
-                    </ul>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
+<div th:replace="/common/nav.html :: fragment-nav"></div>
+<!-------------------------------구분선-------------------------->
 
 <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="false">
     <div class="carousel-indicators">
@@ -188,9 +156,9 @@
 
         <div class="line-3"></div>
 
-        <div class="row row-cols-1 row-cols-md-3 g-4 text-small">
+        <div class="row row-cols-1 row-cols-md-4 g-4 text-small">
             <th:block th:each="event : ${list}">
-                <div class="card">
+                <div class="card g-3">
                     <div class="tumbnail">
                         <a th:href="@{detail(no=${event.no})}"><img id="thumbNail"
                                                                     th:src="@{/event/files/{path}(path=${event.thumbnail})}"
@@ -203,14 +171,14 @@
                         <p class="card-text" th:text="'[' + ${event.content} + ']'"></p>
                     </div>
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item" th:text="'[' + ${event.writer.nick} + ']'"></li>
-                        <li class="list-group-item" th:text="'[' + ${event.date} + ']'"></li>
-                        <li class="list-group-item" th:text="'[' + ${event.location} + ']'"></li>
+                        <li class="list-group-item" th:text="'[관리자 ' + ${event.writer.nick} + ']'"></li>
+                        <li class="list-group-item" th:text="'파티일 ' + '[' + ${#dates.format(event.date, 'yyyy-MM-dd')} + ']'"></li>
+                        <li class="list-group-item" th:text="'장소 ' + '[' + ${event.location} + ']'"></li>
                     </ul>
                     <div class="card-body">
 
                         <div class="d-grid gap-2">
-                            <button class="btn btn-primary" href="#" onclick="" type="button">파티 참가하기</button>
+                            <button class="btn btn-primary" th:href="@{/event/orderform}" onclick="location.href='/event/orderform'" type="button">파티 참가하기</button>
                         </div>
                     </div>
                 </div>
@@ -271,8 +239,7 @@
         crossorigin="anonymous"></script>
 <!-- jquery end-->
 
-<script type='text/javascript'>
-
+<script>
     document.addEventListener('DOMContentLoaded', function() {
         var calendarEl = document.getElementById('calendar');
 
@@ -285,23 +252,13 @@
                     color: '#be5683', //rgb,#ffffff 등의 형식으로 할 수 있어요.
                     //textColor: 'black'
                 },
-                {
-                    googleCalendarId: '여기에 구글 캘린더 ID를 붙여넣기하시면 됩니다.',
-                    className: '정보처리기능사',
-                    color: '#204051',
-                    //textColor: 'black'
-                },
-                {
-                    googleCalendarId: '여기에 구글 캘린더 ID를 붙여넣기하시면 됩니다.',
-                    className: '정보처리기사',
-                    color: '#3b6978',
-                    //textColor: 'black'
-                }
             ]
         });
         calendar.render();
     });
+
 </script>
+
 
 
 </body>
