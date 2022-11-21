@@ -10,7 +10,7 @@
     <result column="title" property="title"/>
     <result column="cont" property="content"/>
     <result column="date" property="date"/>
-    <result column="thumbnail" property="thumbnail"/>
+    <result column="feedThumbnail" property="thumbnail"/>
     <result column="pub" property="pub"/>
     <result column="likecnt" property="likeCnt"/>
 
@@ -20,6 +20,7 @@
       <result column="addr" property="address"/>
       <result column="nick" property="nick"/>
       <result column="intro" property="intro"/>
+      <result column="thumbnail" property="thumbnail"/>
     </association>
 
     <collection property="feedLikeList" ofType="feedLike">
@@ -53,7 +54,7 @@
     f.title,
     f.cont,
     f.date,
-    f.thumbnail,
+    f.thumbnail feedThumbnail,
     f.likecnt
     from
     feed f
@@ -72,7 +73,7 @@
     f.title,
     f.cont,
     f.date,
-    f.thumbnail,
+    f.thumbnail feedThumbnail,
     f.pub
     from
     feed f
@@ -96,10 +97,11 @@
     m.mno,
     m.nick,
     m.addr,
+    m.thumbnail,
     f.title,
     f.cont,
     f.date,
-    f.thumbnail,
+    f.thumbnail feedThumbnail,
     f.likecnt
     from
     feed f
@@ -113,6 +115,7 @@
     mno,
     nick,
     addr,
+    thumbnail,
     intro
     from
     member
@@ -126,13 +129,16 @@
     m.mno,
     m.nick,
     m.addr,
+    m.thumbnail,
     f.title,
     f.cont,
     f.date,
-    f.thumbnail,
-    f.likecnt
+    f.thumbnail feedThumbnail,
+    f.likecnt,
+    fl.mno flmno
     from feed f
     join member m on m.mno = f.mno
+    left join feed_like fl on f.fno=fl.fno
     where f.mno in
     (select following from follower
     where follow=#{writer.no})
@@ -146,10 +152,11 @@
     m.mno,
     m.nick,
     m.addr,
+    m.thumbnail,
     f.title,
     f.cont,
     f.date,
-    f.thumbnail,
+    f.thumbnail feedThumbnail,
     f.likecnt,
     fl.mno flmno
     from feed f
@@ -165,10 +172,11 @@
     m.mno,
     m.nick,
     m.addr,
+    m.thumbnail,
     f.title,
     f.cont,
     f.date,
-    f.thumbnail,
+    f.thumbnail feedThumbnail,
     f.likecnt,
     ff.feedfileno,
     ff.path
@@ -252,7 +260,7 @@
     f.title,
     f.cont,
     f.date,
-    f.thumbnail
+    f.thumbnail feedThumbnail
     from
       feed f
     join member m on m.mno = f.mno
@@ -274,7 +282,7 @@
     f.title,
     f.cont,
     f.date,
-    f.thumbnail
+    f.thumbnail feedThumbnail
     from
     feed f
     join member m on m.mno = f.mno
@@ -297,12 +305,21 @@
     f.title,
     f.cont,
     f.date,
-    f.thumbnail
+    f.thumbnail feedThumbnail
     from
     feed f
     join member m on m.mno = f.mno
     limit 8
   </select>
+
+  <!--  마이페이지 피드게시글 강제삭제 -->
+  <delete id="allDelete2">
+    delete from feed_reply where fno=#{no};
+    delete from feed_like where fno=#{no};
+    delete from feed_file where fno=#{no};
+    delete from feed where fno=#{no};
+  </delete>
+
 
 </mapper>
 

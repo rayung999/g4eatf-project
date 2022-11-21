@@ -28,7 +28,8 @@
       <div class="dropdown text-end me-lg-4">
         <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle"
            data-bs-toggle="dropdown" aria-expanded="false">
-          <img src="/images/mypage.png" alt="mdo" width="32" height="32" class="rounded-circle">
+          <img data-th-if="${session.loginMember == null}" src="/images/mypage.png" alt="mdo" width="32" height="32" class="rounded-circle">
+          <img data-th-if="${session.loginMember != null}" th:src="@{'/member/files/' + ${session.loginMember.thumbnail}}" alt="mdo" width="32" height="32" class="rounded-circle">
         </a>
 
         <ul class="dropdown-menu text-small ">

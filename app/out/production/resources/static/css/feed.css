@@ -120,6 +120,7 @@ section{
   background-color: white;
   border: 1px solid rgba(219,219,219,1);
   border-radius: 3px;
+  /*wdith:58.33333333%;*/
 }
 
 .posts .post-title{
@@ -131,7 +132,7 @@ section{
 
 .posts .post-title .post-left{
   display: flex;
-  align-items: center;
+  align-items: baseline;
 }
 
 .posts .post-title .post-left .image{
@@ -146,11 +147,12 @@ section{
 .posts .post-title .post-left .details .name{
   padding-bottom: 2px;
   font-weight: bold;
+  font-size: 18px;
 }
 
 .posts .post-content img{
-  width: 100%;
-  height: 100%;
+  width: 80%;
+  height: 80%;
   object-fit: cover;
 }
 

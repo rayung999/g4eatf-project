@@ -28,9 +28,7 @@ public class DefaultFeedService implements FeedService {
     if(feedDao.insert(feed) == 0) {
       throw new Exception("게시글 등록 실패");
     }
-    if(feed.getFeedAttachedFiles().size() > 0) {
-      feedDao.insertFiles(feed);
-    }
+
   }
 
   public List<Map<String, Object>> selectFeedList(Criteria cri) {
@@ -71,17 +69,13 @@ public class DefaultFeedService implements FeedService {
       return false;
     }
 
-    if (feed.getFeedAttachedFiles().size() > 0) {
-      feedDao.insertFiles(feed);
-    }
     return true;
   }
 
   @Transactional
   @Override
   public boolean delete(int no) throws Exception {
-    feedDao.deleteFiles(no);
-    return feedDao.delete(no) > 0;
+    return feedDao.allDelete2(no) > 0;
   }
 
   public FeedAttachedFile getFeedAttachedFile(int fileNo) throws Exception {

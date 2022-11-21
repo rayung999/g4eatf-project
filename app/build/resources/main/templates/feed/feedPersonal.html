@@ -103,7 +103,8 @@
               </div>
             </div>
             <div class="post-right">
-              <i class="fas fa-ellipsis-h"></i>
+              <button th:onclick="|location.href='/../feed/@{updateForm(no=${personal.no})}'|"
+                                class="btn btn-primary" role="button" data-bs-toggle="button">수정</button>
             </div>
           </div>
 

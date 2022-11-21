@@ -58,7 +58,9 @@
     mno,
     name,
     id,
-    createddate
+    nick,
+    createddate,
+    thumbnail
     from
     member
     where

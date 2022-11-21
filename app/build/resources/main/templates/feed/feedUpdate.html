@@ -38,27 +38,29 @@
 
 <div class="container align-items-start border rounded">
 <!--<form action='add' method="post" enctype="multipart/form-data">-->
-<form data-th-action="@{/feed/add}" method="post">
+<form data-th-action="@{/feed/update}" method="post">
   <div class="line-3"></div>
 
   <div class="mb-3">
     <label for="exampleFormControlInput1" class="form-label">제목</label>
-    <input name="title" type="textar" class="form-control" id="exampleFormControlInput1" placeholder="제목을 입력하세요">
+    <input name="title" type="textar" class="form-control" id="exampleFormControlInput1" th:value="${feed.title}">
   </div>
   <div class="mb-3">
 <!--    <label for="textarea" class="form-label">내용</label>-->
     <label for="exampleFormControlTextarea1" class="form-label">내용</label>
-    <textarea name="content" class="form-control" id="exampleFormControlTextarea1" rows="3" placeholder="내용을 입력하세요"></textarea>
+    <textarea name="content" class="form-control" id="exampleFormControlTextarea1" rows="3" th:text="${feed.content}"></textarea>
   </div>
 
   <div class="mb-3">
-    <label for="formFile" class="form-label">대표 이미지</label>
-    <input name="files" class="form-control" type="file" id="formFile">
+    <label for="exampleFormControlInput1" class="form-label" style="display: block;">썸네일</label>
+    <img id="thumbNail" th:src="@{/feed/files/{path}(path=${feed.thumbnail})}" class="img-thumbnail" alt="이미지가 없습니다." height="400" width="400">
+
   </div>
 
 
-  <button type="submit">등록하기</button>
-  <a href='/feed/list'>목록</a>
+
+  <button type="submit" class="btn btn-outline-secondary">변경</button>
+  <button type="button" class="btn btn-outline-secondary"><a th:href="@{delete(no=${feed.no})}">삭제</a></button>
 
   <div class="line-3"></div>
 
