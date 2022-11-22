@@ -38,7 +38,7 @@
 <div class="a-example-divider"></div>
 
 
-<div class="container text-center">
+<div class="container text-center" th:if="${session.loginMember != null}">
   <div class="row" style="margin: 15px 0;" >
     <div class="col-7 justify-content-start">
       <div class="left-side">
@@ -48,23 +48,13 @@
             <p class="follow-title" style="float: left; margin-left:30px; margin-top: 10px;">내 팔로우</p>
           </div>
         </div>
-        <div th:if="${session.loginMember == null}">
-          <div style="width:100%; overflow:hidden;">
-            <p class="follow-title" style="float: left; margin-left:30px; margin-top: 10px;">추천 팔로우</p>
-          </div>
-        </div>
+
         <div class="story">
           <div class="line-3"></div>
           <th:block th:if="${session.loginMember != null}">
             <div class="stories" th:each="follow : ${follows}">
               <a th:href="@{/feed/personal(nick=${follow.nick})}"><img th:src="@{/member/files/{path}(path=${follow.thumbnail})}" width="60" height="60" alt="fff"></a>
               <p th:text="${follow.nick}"></p>
-            </div>
-          </th:block>
-          <th:block th:if="${session.loginMember == null}">
-            <div class="stories" th:each="member : ${members}">
-              <a href="/../auth/login"><img th:src="@{/member/files/{path}(path=${member.thumbnail})}" width="60" height="60" alt="fff"></a>
-              <p th:text="${member.nick}"></p>
             </div>
           </th:block>
         </div>
@@ -86,12 +76,37 @@
         </div>
       </th:block>
     </div>
-
-
   </div>
 </div>
 
-<div class="container text-center">
+<div class="container text-center" th:if="${session.loginMember == null}">
+  <div class="row">
+    <div class="col-7" style="text-align: center; margin: 0 auto;">
+      <div class="left-side">
+
+        <div th:if="${session.loginMember == null}">
+          <div style="width:100%; overflow:hidden;">
+            <p class="follow-title" style="float: left; margin-left:30px; margin-top: 10px;">추천 팔로우</p>
+          </div>
+        </div>
+
+        <div class="story">
+          <div class="line-3"></div>
+          <th:block th:if="${session.loginMember == null}">
+            <div class="stories" th:each="member : ${members}">
+              <a href="/../auth/login"><img th:src="@{/member/files/{path}(path=${member.thumbnail})}" width="60" height="60" alt="fff"></a>
+              <p th:text="${member.nick}"></p>
+            </div>
+          </th:block>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="container text-center" th:if="${session.loginMember != null}">
   <div class="row">
     <div class="col-7">
 
@@ -157,69 +172,6 @@
         </div>
       </th:block>
 
-
-      <th:block th:if="${session.loginMember == null}">
-        <div style="width:100%; overflow:hidden;">
-          <p class="follow-title" style="float: left; margin-left:30px; margin-top: 10px;">랜덤 피드</p>
-        </div>
-        <div class="posts" th:each="feed : ${feeds}">
-          <div class="post-title">
-            <div class="post-left">
-              <div class="image"
-                   style="border-radius: 50%; border: 2px solid #ce0c64; object-fit: cover;">
-                <a href="/../auth/login">
-                <img th:src="@{/member/files/{path}(path=${feed.writer.thumbnail})}"
-                     alt="춘데렐라" style="width: 60px; height: 60px;"></a>
-              </div>
-              <div class="details">
-                <p class="name" th:text="${feed.writer.nick}"></p>
-<!--                <p class="location"th:text="${feed.writer.address}"></p>-->
-              </div>
-            </div>
-            <div class="post-right">
-              <i class="fas fa-ellipsis-h"></i>
-            </div>
-          </div>
-
-          <div class="post-content">
-            <a th:href="@{list(no=${feed.no})}"><img id="thumbNail2"
-                                                     th:src="@{/feed/files/{path}(path=${feed.thumbnail})}"
-                                                     class="img-thumbnail" alt="이미지가 없습니다." height="400" width="400">
-            </a>
-          </div>
-
-          <div class="post-footer">
-            <div class="like-share-comment"><a href="/../auth/login">
-              <i class="bi bi-heart feedLikeBtn" data-th-id="'heart' + ${feed.no}" value="0"></i></a>
-              <p class="likes" th:text="${feed.likeCnt}">좋아요 100개</p>
-            </div>
-            <div class="save">
-              <i class="far fa-bookmark"></i>
-            </div>
-          </div>
-
-          <div class="post-footer-content">
-            <p class="name" th:text="${feed.title}"></p>
-            <p class="cont" th:text="${feed.content}"></p>
-            <p class="comments">댓글 10개 모두 보기</p>
-            <p class="posting-time" th:text="${feed.date}"></p>
-          </div>
-
-          <div class="add-comment">
-            <div class="left-side">
-              <i class="far fa-smile-beam"></i>
-              <input type="text" placeholder="댓글 달기...">
-            </div>
-            <div class="right-side">
-            </div>
-          </div>
-        </div>
-      </th:block>
-
-
-
-
-
     </div>
 
 
@@ -268,7 +220,7 @@
 
       </div>
 
-<!--      <div class="line-3"></div>-->
+      <!--      <div class="line-3"></div>-->
 
       <div class="row">
         <div class="col  align-items-center">
@@ -279,6 +231,74 @@
     </div>
   </div>
 </div>
+
+<div class="container text-center" th:if="${session.loginMember == null}">
+<!--  <div class="row">-->
+    <div class="col-7" style="text-align: center; margin: 0 auto;">
+
+      <th:block th:if="${session.loginMember == null}">
+      <div style="width:100%; overflow:hidden;">
+        <p class="follow-title" style="float: left; margin-left:30px; margin-top: 10px;">랜덤 피드</p>
+      </div>
+      <div class="posts" th:each="feed : ${feeds}">
+        <div class="post-title">
+          <div class="post-left">
+              <div class="image"
+              style="border-radius: 50%; border: 2px solid #ce0c64; object-fit: cover;">
+                <a href="/../auth/login">
+                <img th:src="@{/member/files/{path}(path=${feed.writer.thumbnail})}"
+                alt="춘데렐라" style="width: 60px; height: 60px;"></a>
+              </div>
+              <div class="details">
+                <p class="name" th:text="${feed.writer.nick}"></p>
+                <!--                <p class="location"th:text="${feed.writer.address}"></p>-->
+              </div>
+          </div>
+          <div class="post-right">
+              <i class="fas fa-ellipsis-h"></i>
+          </div>
+        </div>
+
+        <div class="post-content">
+          <a th:href="@{list(no=${feed.no})}"><img id="thumbNail2"
+          th:src="@{/feed/files/{path}(path=${feed.thumbnail})}"
+          class="img-thumbnail" alt="이미지가 없습니다." height="400" width="400">
+          </a>
+        </div>
+
+        <div class="post-footer">
+          <div class="like-share-comment"><a href="/../auth/login">
+              <i class="bi bi-heart feedLikeBtn" data-th-id="'heart' + ${feed.no}" value="0"></i></a>
+              <p class="likes" th:text="${feed.likeCnt}">좋아요 100개</p>
+          </div>
+          <div class="save">
+              <i class="far fa-bookmark"></i>
+          </div>
+        </div>
+
+        <div class="post-footer-content">
+          <p class="name" th:text="${feed.title}"></p>
+          <p class="cont" th:text="${feed.content}"></p>
+          <p class="comments">댓글 10개 모두 보기</p>
+          <p class="posting-time" th:text="${feed.date}"></p>
+        </div>
+
+        <div class="add-comment">
+          <div class="left-side">
+              <i class="far fa-smile-beam"></i>
+              <input type="text" placeholder="댓글 달기...">
+          </div>
+          <div class="right-side">
+          </div>
+        </div>
+      </div>
+      </th:block>
+
+
+<!--    </div>-->
+  </div>
+</div>
+
 
 <script>
   $(document).ready(function () {
