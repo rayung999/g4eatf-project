@@ -5,6 +5,24 @@
   font-family: sans-serif;
 }
 
+/* 링크 텍스트 색상, 밑줄 */
+a:link {
+  color : black;
+  text-decoration: none;
+}
+a:visited {
+  color : black;
+  text-decoration: none;
+}
+a:hover {
+  color : red;
+  text-decoration: none;
+}
+a:active {
+  color : red;
+  text-decoration: none;
+}
+
 /* Header */
 
 header{
@@ -80,6 +98,13 @@ section{
   display: flex;
 }
 
+.follow-title{
+  font-size: 20px;
+  font-weight: 500;
+  font-style: italic;
+  color: #5c636a;
+}
+
 .left-side{
   /*width: 65%;*/
 }
@@ -101,10 +126,12 @@ section{
 
 .story .stories a img{
   border-radius: 50%;
-  border: 2px solid #c62d8f;
+  border: 2px solid #ce0c64;
   object-fit: cover;
   margin: 3px;
 }
+
+
 
 .story .stories p{
   width: 90%;
@@ -116,7 +143,7 @@ section{
 
 /* Posts */
 .posts{
-  margin:25px 0;
+  margin: 0px 0px 25px 0px;
   background-color: white;
   border: 1px solid rgba(219,219,219,1);
   border-radius: 3px;
@@ -141,7 +168,7 @@ section{
 
 .posts .post-title .post-left .image img{
   border-radius: 50%;
-  object-fit: contain;
+  object-fit: cover;
 }
 
 .posts .post-title .post-left .details .name{
@@ -159,7 +186,7 @@ section{
 .posts .post-footer{
   display: flex;
   justify-content: space-between;
-  padding: 16px;
+  padding: 16px 16px 0 16px;
 }
 
 .posts .post-footer .like-share-comment i{

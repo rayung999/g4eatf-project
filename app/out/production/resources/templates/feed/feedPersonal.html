@@ -68,7 +68,7 @@
 
         <div class="col-12">
 
-          <p th:text="${member.nick}" style="font-size: 20px; font-weight: 500;"></p>
+          <p th:text="${member.nick}" style="font-size: 24px; font-weight: 500;"></p>
 
         </div>
 
@@ -76,7 +76,7 @@
 
         <div class="col-12">
 
-          <p th:text="${member.address}"></p>
+          <p th:text="${member.address}" style="font-size: 16px; font-weight: 300;"></p>
 
         </div>
 
@@ -84,7 +84,7 @@
 
         <div class="col-12">
 
-          <p th:text="${member.intro}"></p>
+          <p th:text="${member.intro}" style="font-size: 17px; font-weight: 380;"></p>
 
         </div>
 
@@ -99,7 +99,8 @@
         <div class="posts">
           <div class="post-title">
             <div class="post-left">
-              <div class="image">
+              <div class="image"
+                   style="border-radius: 50%; border: 2px solid #ce0c64; object-fit: cover;">
                 <img th:src="@{/member/files/{path}(path=${personal.writer.thumbnail})}"
                      alt="춘데렐라" style="width: 60px; height: 60px;">
               </div>
