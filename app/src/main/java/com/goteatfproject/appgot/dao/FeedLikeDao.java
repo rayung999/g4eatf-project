@@ -21,4 +21,6 @@ public interface FeedLikeDao {
   int isLike(FeedLike feedLike);
 
 
+
+
 }

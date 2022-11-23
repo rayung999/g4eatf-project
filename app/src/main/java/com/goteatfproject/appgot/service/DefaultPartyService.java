@@ -146,4 +146,16 @@ public class DefaultPartyService implements PartyService {
   public List<Party> mainList() throws Exception {
     return partyDao.findAllMain();
   }
+
+  //메인페이지에서 뽑는 파티리스트(String 받기)
+  @Override
+  public List<Party> mainList(String meal, String food) throws Exception {
+    return partyDao.findAllMain(meal, food);
+  }
+
+  //마이페이지 파티게시글 연쇄삭제
+  @Override
+  public boolean allDelete(int no) {
+    return partyDao.allDelete(no) > 0;
+  }
 }

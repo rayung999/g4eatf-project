@@ -2,8 +2,10 @@ package com.goteatfproject.appgot.service;
 
 import com.goteatfproject.appgot.dao.FeedDao;
 import com.goteatfproject.appgot.dao.PartyDao;
-import com.goteatfproject.appgot.vo.*;
-
+import com.goteatfproject.appgot.vo.Criteria;
+import com.goteatfproject.appgot.vo.Feed;
+import com.goteatfproject.appgot.vo.FeedAttachedFile;
+import com.goteatfproject.appgot.vo.Party;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,7 +30,9 @@ public class DefaultFeedService implements FeedService {
     if(feedDao.insert(feed) == 0) {
       throw new Exception("게시글 등록 실패");
     }
-
+    if(feed.getFeedAttachedFiles().size() > 0) {
+      feedDao.insertFiles(feed);
+    }
   }
 
   public List<Map<String, Object>> selectFeedList(Criteria cri) {
@@ -69,13 +73,17 @@ public class DefaultFeedService implements FeedService {
       return false;
     }
 
+    if (feed.getFeedAttachedFiles().size() > 0) {
+      feedDao.insertFiles(feed);
+    }
     return true;
   }
 
   @Transactional
   @Override
   public boolean delete(int no) throws Exception {
-    return feedDao.allDelete2(no) > 0;
+    feedDao.deleteFiles(no);
+    return feedDao.delete(no) > 0;
   }
 
   public FeedAttachedFile getFeedAttachedFile(int fileNo) throws Exception {
@@ -104,9 +112,15 @@ public class DefaultFeedService implements FeedService {
   public boolean feedBlock(int no) {
     return feedDao.feedBlock(no) > 0;
   }
+
   @Override
   public List<Feed> mainList() throws Exception {
     return feedDao.findAllMain();
   }
-}
 
+  // 마이페이지 피드게시글 강제삭제 — 1120 추가
+  @Override
+  public boolean allDelete2(int no) {
+    return feedDao.allDelete2(no) > 0;
+  }
+}

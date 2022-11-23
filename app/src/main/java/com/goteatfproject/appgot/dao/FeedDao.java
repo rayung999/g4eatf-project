@@ -6,7 +6,6 @@ import com.goteatfproject.appgot.vo.FeedAttachedFile;
 import com.goteatfproject.appgot.vo.Party;
 import java.util.Map;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -21,7 +20,7 @@ public interface FeedDao {
   List<Map<String, Object>> selectFeedList(Criteria cri);
 
   // 추가
-  List<Feed> selectListByNick(@Param("nick") String nick);
+  List<Feed> selectListByNick(String nick);
   List<Feed> randomfindAll();
   List<Feed> followFindAll(int no);
   List<Feed> simpleProfile(int no);
@@ -54,11 +53,9 @@ public interface FeedDao {
   // 관리자페이지 이벤트게시글 비활성화
   int feedBlock(int no);
 
-
   //메인페이지 파티게시물 조회
   List<Feed> findAllMain();
 
-  // 마이페이지 피드게시글 강제삭제 -- 1120 추가
+  // 마이페이지 피드게시글 강제삭제 — 1120 추가
   int allDelete2(int no);
-
 }

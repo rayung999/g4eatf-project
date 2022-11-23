@@ -6,8 +6,6 @@ import com.goteatfproject.appgot.vo.Criteria;
 import com.goteatfproject.appgot.vo.Event;
 import java.util.List;
 import java.util.Map;
-
-import com.goteatfproject.appgot.vo.Party;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -35,7 +33,6 @@ public class DefaultEventService implements EventService {
   public List<Event> list() throws Exception {
     return eventDao.findAll();
   }
-
 
   //페이징
   @Override
@@ -104,5 +101,20 @@ public class DefaultEventService implements EventService {
     return eventDao.findAllMain();
   }
 
+  // 관리자페이지 이벤트게시글 상세보기
+  // 사용안함
+  @Override
+  public Event getAdminEventListDetail(int no) {
+    return eventDao.findByAdminEventListDetail(no);
+  }
 
+  //결제 수량
+  public int getPayCnt(){
+    return eventDao.payCnt();
+  }
+  //결제 여부
+  public boolean ticketing(Map<String, Object> ticket){
+    return eventDao.ticketing(ticket);
+  }
 }
+

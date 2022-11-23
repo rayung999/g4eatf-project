@@ -94,10 +94,10 @@ public class FeedController {
     // 한 유저의 게시물 출력 홈페이지
     System.out.println("dd");
     // 아이디로 회원 정보 조회
-      Member member = memberService.profileByNick(nick);
-      if(nick == null) {
+    Member member = memberService.profileByNick(nick);
+    if(nick == null) {
       member = memberService.profileByNick(loginMember.getNick());
-        System.out.println(member + "ㅎㅅㅎㅅ");
+      System.out.println(member + "ㅎㅅㅎㅅ");
     }
 
 
@@ -132,7 +132,7 @@ public class FeedController {
 
     List<Feed> feedList = feedService.selectListByNick(nick);
     if (nick == null) {
-       feedList = feedService.selectListByNick(loginMember.getNick());
+      feedList = feedService.selectListByNick(loginMember.getNick());
     }
 
 
@@ -192,6 +192,35 @@ public class FeedController {
 
     return "feed/feedPersonal";
   }
+
+  //  @GetMapping("/list")
+//  public String list(Model model, HttpSession session) throws Exception {
+//
+//    Member loginMember = (Member) session.getAttribute("loginMember");
+//
+//    // 피드 팔로우 기능
+//    if(loginMember != null) {
+//      List<Follower> followList = followerService.selectFollowList(loginMember.getNo());
+//      model.addAttribute("follows", followList);
+//      model.addAttribute("members", memberService.randomList());
+//    } else {
+//      model.addAttribute("members", memberService.randomList());
+//    }
+//
+//    // 피드 리스트 출력
+//    if(loginMember != null) {
+//      model.addAttribute("followfeeds", feedService.followFindAll(loginMember.getNo()));
+//    } else {
+//      model.addAttribute("feeds", feedService.randomlist());
+//    }
+//
+//    // 로그인멤버 간단 프로필 출력
+//    if(loginMember != null) {
+//      model.addAttribute("simples", feedService.simpleProfile(loginMember.getNo()));
+//    } else {} // -> 로그인을 안했으면 css 히든 넣기 -> 근데 방법을 모름
+//
+//    return "feed/feedList";
+//  }
 
 
   @GetMapping("/list")
@@ -396,3 +425,8 @@ public class FeedController {
   }
 
 }
+
+
+
+
+
