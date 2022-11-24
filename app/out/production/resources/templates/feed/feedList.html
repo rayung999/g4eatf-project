@@ -119,7 +119,7 @@
           <div class="post-title">
             <div class="post-left">
               <div class="image"
-                   style="border-radius: 50%; border: 2px solid #ce0c64; object-fit: cover;">
+                   style="border-radius: 50%; border: 3px solid #ffc107; object-fit: cover;">
                 <a th:href="@{/feed/personal(nick=${feed.writer.nick})}">
                   <img th:src="@{/member/files/{path}(path=${feed.writer.thumbnail})}"
                        alt="춘데렐라" style="width: 60px; height: 60px;">
@@ -194,9 +194,7 @@
                 <div class="line-2"></div>
                 <div class="image align-items-center" th:each="simple : ${simples}">
                   <a th:href="@{/feed/personal(nick=${simple.writer.nick})}">
-                    <img th:src="@{/member/files/{path}(path=${simple.writer.thumbnail})}"
-                         class="rounded-circle" width="100" height="100"
-                         style="border-radius: 50%; object-fit: contain; border-radius: 50%; border: 2px solid #ce0c64; object-fit: cover;"></a>
+                    <img th:src="@{/member/files/{path}(path=${simple.writer.thumbnail})}" class="rounded-circle" width="100" height="100" style="border-radius: 50%; object-fit: contain; border-radius: 50%; border: 3px solid #ffc107; object-fit: cover;"></a>
                 </div>
                 <div class="line-3"></div>
               </div>
@@ -223,8 +221,8 @@
 
       <div class="row">
         <div class="col  align-items-center">
-          <a onclick="location.href='/../feed/form'"
-             class="btn btn-outline-secondary" role="button" data-bs-toggle="button">게시글 작성하기</a>
+          <a onclick="location.href='/../feed/form'" class="btn btn-outline-dark" style="background-color: #ffc107; border-color: white"
+             role="button" data-bs-toggle="button">게시글 작성하기</a>
         </div>
       </div>
     </div>
@@ -243,7 +241,7 @@
         <div class="post-title">
           <div class="post-left">
             <div class="image"
-                 style="border-radius: 50%; border: 2px solid #ce0c64; object-fit: cover;">
+                 style="border-radius: 50%; border: 3px solid #ffc107; object-fit: cover;">
               <a href="/../auth/login">
                 <img th:src="@{/member/files/{path}(path=${feed.writer.thumbnail})}"
                      alt="춘데렐라" style="width: 60px; height: 60px;" onclick="alert('로그인 페이지로 이동합니다.')"></a>
@@ -371,19 +369,12 @@
   });
 </script>
 
-<!-------------------------------구분선-------------------------->
+<!--구분선-->
 <div class="line-3"></div>
+
 <!------------------------------footer------------------------------>
-<footer class="py-3 my-4">
-  <ul class="nav justify-content-center border-bottom pb-3 mb-3">
-    <li class="nav-item"><a th:href="@{/}" class="nav-link px-2 text-muted">Home</a></li>
-    <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Features</a></li>
-    <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Pricing</a></li>
-    <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">FAQs</a></li>
-    <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">About</a></li>
-  </ul>
-  <p class="text-center text-muted">© 2022 Chunderella Corp & TwoAppleteam. All Rights Reserved.</p>
-</footer>
+<div th:replace="/common/footer.html :: fragment-footer"></div>
+<!------------------------------footer 마지막------------------------------>
 
 
 </body>

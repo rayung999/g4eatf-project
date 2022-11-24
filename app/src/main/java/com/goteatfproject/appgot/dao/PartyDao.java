@@ -27,7 +27,10 @@ public interface PartyDao {
 
   Party findByNo(int no);
 
+  // 마이페이지 파티게시글 수정
   int update(Party party);
+  // 파티게시판 게시글 수정
+  int update2(Party party);
   int delete(int no);
 
   int insertFiles(Party party);
@@ -72,4 +75,9 @@ public interface PartyDao {
 
   // 마이페이지 파티게시글 연쇄삭제
   int allDelete(int no);
+
+  // 검색페이지 결과
+  List<Party> findAllSearch(String keywordAll);
+
+  public void updatePartyCount(int no);
 }

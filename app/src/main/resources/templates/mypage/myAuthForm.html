@@ -47,11 +47,11 @@
             <div class="col-12 border">
               <!-- 개인 상세 정보 -->
               <p>본인 확인을 위해 현재 사용하고 있는 비밀번호를 한 번 더 입력해주세요.</p>
-              <form action="currentPassword" id="currentPasswordForm" method="post">
+              <form action="currentPassword" id="currentPasswordForm" name="myForm" method="post">
               <table>
                 <input type="password" id="password" name="password"/>
               </table>
-                <br><button type="button" class="btn btn-outline-secondary" id="passwordCheckBtn">확인하기</button>
+                <br><button type="button" class="btn btn-outline-dark" style="background-color: #ffc107; border-color: white" id="passwordCheckBtn">확인하기</button>
               </form>
               <div class="line-2"></div>
             </div>
@@ -89,5 +89,13 @@
     	});
     });
     </script>
+  <script>
+    /* 엔터 이벤트 막기 */
+    document.myForm.addEventListener('keydown', function(event) {
+      if (event.keyCode === 13) {
+        event.preventDefault();
+      };
+    }, true);
+  </script>
   </body>
 </html>

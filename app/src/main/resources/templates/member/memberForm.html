@@ -159,7 +159,8 @@
     <div class="hstack gap-3">
       <div class="col-1"><span style="color: lightpink">*</span> 우편번호</div>
       <input class="form-control me-auto" type="text" id="sample4_postcode" name="post" placeholder="우편번호" aria-label="Add your item here...">
-      <button type="button" class="btn btn-outline-info col-1" onclick="sample4_execDaumPostcode()" value="우편번호 찾기">우편번호</button>
+      <button type="button" class="btn btn-outline-dark col-1"
+              style="background-color: #ffc107; border-color: white" onclick="sample4_execDaumPostcode()" value="우편번호 찾기">우편번호</button>
 <!--      <input type="button" onclick="sample4_execDaumPostcode()" value="우편번호 찾기"><br>-->
     </div>
 
@@ -230,7 +231,7 @@
     <div class="hstack gap-3">
               <div class="col-1"><span style="color: lightpink">*</span> 관심사</div>
 <!--          <select class="form-select form-select-sm xx-select-interest" name="interest" id="xx-select-interest" aria-label=".form-select-sm example">-->
-            <select class="form-select xx-select-interest" name="interest" id="xx-select-interest" aria-label="Default select example">
+            <select class="form-select xx-select-interest" id="xx-select-interest" aria-label="Default select example">
             <option selected="">관심사 선택</option>
             <option value="코딩">코딩</option>
             <option value="여행">여행</option>

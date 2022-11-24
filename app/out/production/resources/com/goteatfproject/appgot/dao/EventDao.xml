@@ -22,7 +22,12 @@
   <association property="writer" javaType="member">
     <id column="mno" property="no"/>
     <result column="nick" property="nick"/>
+    <result column="name" property="name"/>
   </association>
+
+    <association property="commentList" javaType="eventComment"> <!-- eventComment객체는 event객체의 setter commentList에 담아 -->
+      <id column="rno" property="reviewNo"/>
+    </association>
 
   <collection property="attachedFiles" ofType="attachedFile">
     <id column="efileno" property="no"/>
@@ -30,6 +35,7 @@
     <result column="filename" property="fileName"/>
     <result column="savename" property="saveName"/>
   </collection>
+
 
   </resultMap>
 
@@ -39,7 +45,18 @@
     <result column="filename" property="fileName"/>
     <result column="savename" property="saveName"/>
     <result column="eno" property="eventNo"/>
+  </resultMap>
 
+  <resultMap type="eventComment" id="eventCommentMap">
+    <id column="rno" property="reviewNo"/>
+    <result column="eno" property="eventNo"/>
+    <result column="cont" property="commentCont"/>
+    <result column="date" property="date"/>
+
+    <association property="writer" javaType="member"> <!-- member객체는 party객체의 setter writer에 담아 -->
+      <id column="mno" property="no"/>
+      <result column="nick" property="nick"/>
+    </association>
   </resultMap>
 
 <!-- COST 추가 예정 -->
@@ -47,7 +64,7 @@
           useGeneratedKeys="true" keyColumn="eno" keyProperty="no">
     insert into event(mno, title, cont, date, loc, addr, createdate, thumbnail)
     VALUES
-    (#{writer.no}, #{title}, #{content},  #{date},  #{location},    #{address},  now(), #{thumbnail} )
+    (#{writer.no}, #{title}, #{content},  #{date},  #{location},  #{address},  now(), #{thumbnail} )
   </insert>
 
     <!--페이징 목록 -->
@@ -70,6 +87,7 @@
   from event e
   
   join member m on e.mno = m.mno
+  where e.pub = false
    order by
       eno desc
       LIMIT #{pageStart}, #{perPageNum}
@@ -292,11 +310,89 @@
 
   <insert id="ticketing" parameterType="Hashmap">
     insert into ticket
-    (eno, totalcost, mno, paycnt)
+    (eno, totalcost, mno, paycnt, pay, paydate)
     values
-    (#{eno}, #{totalcost}, #{mno}, #{paycnt})
+    (#{eno}, #{totalcost}, #{mno}, #{paycnt}, '카카오페이', now())
   </insert>
 
+<!--  검색결과 페이지 -->
+  <select id="findAllSearch" resultMap="eventMap" >
+    select
+    e.eno,
+    m.mno,
+    e.title,
+    e.cont,
+    e.date,
+    e.loc,
+    e.addr,
+    e.viewcnt,
+    e.pub,
+    e.createdate,
+    e.thumbnail
+
+    from event e
+    join member m on e.mno = m.mno
+    <if test="keywordAll != null">
+      where
+      e.title like concat("%", #{keyword}, "%")
+      or e.cont like concat("%", #{keyword}, "%")
+    </if>
+    order by
+    e.eno desc
+    limit 10
+  </select>
+
+  <!-- 댓글 작성 -->
+  <insert id="insertComment" parameterType="eventComment">
+    insert into review (mno, eno, cont, date)
+    values (#{writer.no}, #{eventNo}, #{commentCont}, now())
+  </insert>
+
+  <!-- 댓글 출력 -->
+  <select id="selectCommentList" resultMap="eventCommentMap">
+    select
+    r.rno,
+    r.eno,
+    r.cont,
+    r.date,
+    r.pub,
+    m.nick,
+    m.mno
+    from
+    review r
+    join member m on r.mno = m.mno
+    where eno = #{eventNo}
+  </select>
+
+  <!-- 댓글 수정 -->
+  <update id="updateComment" parameterType="eventComment">
+    update
+    review
+    set
+    cont = #{commentCont}
+    where
+    rno = #{reviewNo}
+    and
+    mno = #{writer.no}
+  </update>
+
+  <!-- 댓글 삭제 -->
+  <delete id="deleteComment">
+    delete from
+    review
+    where
+    rno = #{reviewNo}
+  </delete>
+
+  <!-- 게시물 조회수 카운트 -->
+  <update id="updateEventCount" parameterType="party">
+    update
+    event
+    set
+    viewcnt = viewcnt + 1
+    where
+    eno = #{no}
+  </update>
 </mapper>
 
 

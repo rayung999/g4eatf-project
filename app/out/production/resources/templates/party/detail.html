@@ -15,8 +15,8 @@
 
   <!-- 서머노트css -->
   <!-- include libraries(jQuery, bootstrap) -->
-  <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"
-        rel="stylesheet">
+<!--  <link href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css"-->
+<!--        rel="stylesheet">-->
 
   <!-- include summernote css/js -->
   <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote.min.css"
@@ -135,8 +135,46 @@
       </ul>
     </div>
 
-    <button data-th-if="${session.loginMember != null}" type="button" class="btn btn-outline-secondary"><a th:href="@{modify(no=${party.no})}">변경</a></button>
-    <button data-th-if="${session.loginMember != null}" type="button" class="btn btn-outline-secondary"><a th:href="@{delete(no=${party.no})}">삭제</a></button>
+    <button data-th-if="${session.loginMember != null}"  class="btn btn-outline-dark" style="background-color: #ffc107; border-color: white"><a th:href="@{modify(no=${party.no})}">변경</a></button>
+    <button data-th-if="${session.loginMember != null}"  class="btn btn-outline-dark" style="background-color: #ffc107; border-color: white"><a th:href="@{delete(no=${party.no})}">삭제</a></button>
+
+    <h5>Comment : </h5>
+    <div class="xx-comment-parent">
+      <div class="xx-comment">
+
+      </div>
+    </div>
+
+    <!-- 댓글 작성 -->
+<!--    <div class="card my-4">-->
+<!--      <h5 class="card-header">Leave a Comment:</h5>-->
+<!--      <div class="card-body">-->
+<!--        <form name="comment-form" data-th-action="@{/party/comment}" method="post" autocomplete="off">-->
+<!--          <div class="form-group">-->
+<!--            <input type="hidden" name="no" data-th-value="${party.no}"/>-->
+<!--            <input data-th-if="${session.loginMember != null}" name="session" data-th-value="${session.loginMember.getNo()}" hidden/>-->
+<!--            <textarea name="commentCont" class="form-control" rows="3"></textarea>-->
+<!--          </div>-->
+<!--          <button type="submit" class="btn btn-primary">댓글등록</button>-->
+<!--        </form>-->
+<!--      </div>-->
+<!--    </div>-->
+
+    <div class="card my-4">
+      <h5 class="card-header">댓글 등록 :</h5>
+      <div class="card-body">
+        <form name="comment-form" data-th-action="@{/party/comment}" method="post" autocomplete="off">
+          <div class="form-floating">
+            <input type="hidden" name="no" data-th-value="${party.no}"/>
+            <input data-th-if="${session.loginMember != null}" name="session" data-th-value="${session.loginMember.getNo()}" hidden/>
+            <textarea class="form-control" name="commentCont" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+            <button type="submit" class="btn btn-primary btn-sm">댓글 등록</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- 댓글 작성 마지막-->
 
     </div>
 <!--<table border='1'>-->
@@ -183,27 +221,27 @@
 <!--</form>-->
 
 <!--                                onclick="location.href='/auth/logout'"-->
-  <h5>Comment : </h5>
-  <div class="xx-comment-parent">
-  <div class="xx-comment">
-  </div>
-  </div>
+<!--  <h5>Comment : </h5>-->
+<!--  <div class="xx-comment-parent">-->
+<!--  <div class="xx-comment">-->
+<!--  </div>-->
+<!--  </div>-->
 
-<!-- 댓글 작성 -->
-  <div class="card my-4">
-    <h5 class="card-header">Leave a Comment:</h5>
-    <div class="card-body">
-      <form name="comment-form" data-th-action="@{/party/comment}" method="post" autocomplete="off">
-        <div class="form-group">
-          <input type="hidden" name="no" data-th-value="${party.no}"/>
-          <input data-th-if="${session.loginMember != null}" name="session" data-th-value="${session.loginMember.getNo()}" hidden/>
-          <textarea name="commentCont" class="form-control" rows="3"></textarea>
-        </div>
-        <button type="submit" class="btn btn-primary">댓글등록</button>
-      </form>
-    </div>
-  </div>
-<!-- 댓글 작성 마지막-->
+<!--&lt;!&ndash; 댓글 작성 &ndash;&gt;-->
+<!--  <div class="card my-4">-->
+<!--    <h5 class="card-header">Leave a Comment:</h5>-->
+<!--    <div class="card-body">-->
+<!--      <form name="comment-form" data-th-action="@{/party/comment}" method="post" autocomplete="off">-->
+<!--        <div class="form-group">-->
+<!--          <input type="hidden" name="no" data-th-value="${party.no}"/>-->
+<!--          <input data-th-if="${session.loginMember != null}" name="session" data-th-value="${session.loginMember.getNo()}" hidden/>-->
+<!--          <textarea name="commentCont" class="form-control" rows="3"></textarea>-->
+<!--        </div>-->
+<!--        <button type="submit" class="btn btn-primary">댓글등록</button>-->
+<!--      </form>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--&lt;!&ndash; 댓글 작성 마지막&ndash;&gt;-->
 
 <!---------------------------- 상세보기 end ------------------------------>
 
@@ -340,17 +378,19 @@ $(function () {
           console.log('로그인no :' + sno) // 로그인 세션 no
           console.log(sno == value.writer.no)
           // console.log(userNo == result[i].writer.no); // 강사님
-        str += "<div class='comment' style='border:3px solid black;'>";
+        // str += "<div class='comment' style='border:3px solid black;'>";
+          str += "<div class='my-3'>";
         str += "<span class='xx-nick'>" + '작성자 : ' + value.writer.nick + "</span><br>";
         str += "<span class='xx-comment-cont' id='xx-cont" + value.partyReplyNo + "'>" + '내용 : ' + value.commentCont + "</span><br>";
         // if (userNo == result[i].writer.no) { // 강사님
         if (sno == value.writer.no) {
-           str += "<button type='button' class='xx-updateComment' id='xx-prno-update" + value.partyReplyNo + "' name='partyReplyNo' data-prno='" + value.partyReplyNo + "' data-mno='" + value.writer.no + "'>댓글 수정</button>";
-          str += "<button type='button' class='xx-deleteComment' id='xx-prno-delete"
+           str += "<button type='button' class='btn btn-primary btn-sm xx-updateComment' id='xx-prno-update" + value.partyReplyNo + "' name='partyReplyNo' data-prno='" + value.partyReplyNo + "' data-mno='" + value.writer.no + "'>댓글 수정</button>";
+          str += "<button type='button' class='btn btn-primary btn-sm xx-deleteComment' id='xx-prno-delete"
               + value.partyReplyNo + "' data-prno='" + value.partyReplyNo
               + "' data-mno='" + value.writer.no + "'>댓글 삭제</button><br>";
         }
         str += "</div>";
+        str += "<hr style='border: 1px solid lightpink; margin-top: -1px; margin-bottom: -1px'>"
         });
         $(".xx-comment").html(str);
         //==== each 테스트 마지막

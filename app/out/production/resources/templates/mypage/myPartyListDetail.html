@@ -58,7 +58,7 @@
   </div>
   <!-- Page content wrapper-->
   <!-- 상세보기 -->
-  <form th:action="@{/party/update}" method="post" enctype="multipart/form-data" style="margin: 15px">
+  <form th:action="@{/my/updateParty}" method="post" enctype="multipart/form-data" style="margin: 15px">
     <h2 class="mt-4">파티게시물 상세정보</h2>
     <div class="container border rounded">
   
@@ -132,7 +132,8 @@
       </div>
     </div>
     <button type="submit" class="btn btn-outline-secondary">수정</button>
-    <button type="button" class="btn btn-outline-secondary" style="border:none;"><a th:href="@{myPartyDelete(no=${party.no})}" class="btn btn-outline-secondary">삭제</a></button>
+<!--    <button type="button" class="btn btn-outline-secondary" style="border:none;">-->
+      <a th:href="@{myPartyDelete(no=${party.no})}" type="button" class="btn btn-outline-dark" style="background-color: #ffc107; border-color: white">삭제</a>
     
   </form> 
   <!---------------------------- 상세보기 end ------------------------------>

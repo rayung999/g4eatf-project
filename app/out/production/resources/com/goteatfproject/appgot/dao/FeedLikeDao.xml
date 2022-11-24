@@ -30,6 +30,10 @@
     delete from feed_like where mno=#{member.no} and fno=#{feed.no}
   </delete>
 
+  <delete id="deleteLikeAll">
+    delete from feed_like where fno=#{feed.no}
+  </delete>
+
   <select id="updateLike" resultMap="feedLikeMap">
     update feed
     set

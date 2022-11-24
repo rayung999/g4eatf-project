@@ -137,7 +137,7 @@
             <div class="container">
 
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <button type="button" class="btn btn-outline-primary"
+                    <button type="button" class="btn btn-outline-dark" style="background-color: #ffc107; border-color: white"
                             onclick="location.href='/event/form'">파티원 모집하기
                     </button>
                 </div>
@@ -165,7 +165,8 @@
                             <div class="card-body">
                 
                               <div class="d-grid gap-2">
-                                <button class="btn btn-primary" th:href="@{/event/orderform}" onclick="location.href='/event/orderform'" type="button">파티 참가하기</button>
+                                <button th:href="@{/event/orderform}" onclick="location.href='/event/orderform'" type="button"
+                                        class="btn btn-outline-dark" style="background-color: #ffc107; border-color: white">파티 참가하기</button>
                               </div>
                             </div>
                           </div>

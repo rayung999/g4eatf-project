@@ -1,6 +1,7 @@
 package com.goteatfproject.appgot.service;
 
 import com.goteatfproject.appgot.dao.FeedDao;
+import com.goteatfproject.appgot.dao.FeedLikeDao;
 import com.goteatfproject.appgot.dao.PartyDao;
 import com.goteatfproject.appgot.vo.Criteria;
 import com.goteatfproject.appgot.vo.Feed;
@@ -18,6 +19,8 @@ public class DefaultFeedService implements FeedService {
 
   @Autowired
   FeedDao feedDao;
+  @Autowired
+  FeedLikeDao feedLikeDao;
 
   @Override
   public List<Feed> list() throws Exception {
@@ -73,15 +76,16 @@ public class DefaultFeedService implements FeedService {
       return false;
     }
 
-    if (feed.getFeedAttachedFiles().size() > 0) {
-      feedDao.insertFiles(feed);
-    }
+//    if (feed.getFeedAttachedFiles().size() > 0) {
+//      feedDao.insertFiles(feed);
+//    }
     return true;
   }
 
   @Transactional
   @Override
   public boolean delete(int no) throws Exception {
+    feedLikeDao.deleteLikeAll(no);
     feedDao.deleteFiles(no);
     return feedDao.delete(no) > 0;
   }
@@ -122,5 +126,10 @@ public class DefaultFeedService implements FeedService {
   @Override
   public boolean allDelete2(int no) {
     return feedDao.allDelete2(no) > 0;
+  }
+
+  // 검색페이지 결과
+  public List<Party> searchList(String keywordAll) throws Exception {
+    return feedDao.findAllSearch(keywordAll);
   }
 }

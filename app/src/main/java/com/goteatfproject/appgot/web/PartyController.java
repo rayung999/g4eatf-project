@@ -105,7 +105,7 @@ public class PartyController {
       @RequestParam("files") MultipartFile[] files) throws Exception {
 
     // thumbnail default 파일 설정 TODO 추가1
-    party.setThumbnail("logo.png");
+    party.setThumbnail("defaultimage.jpg");
 
     party.setAttachedFiles(saveAttachedFiles(files));
     party.setWriter((Member) session.getAttribute("loginMember"));
@@ -234,7 +234,7 @@ public class PartyController {
     // 위에 추가해야 party.getNo() 가져오기 가능 System.out.println("partyNo = " + party.getNo());
     checkOwner(party.getNo(), session);
 
-    if (!partyService.update(party)) {
+    if (!partyService.update2(party)) {
       throw new Exception("게시글을 변경할 수 없습니다.");
     }
     return "redirect:list?meal=all";
@@ -246,7 +246,7 @@ public class PartyController {
     // getWriter().getNo() != loginMember.getNo() // 로그인 멤버no 꺼내서 party에 있는 Member writer 이용해서 일치여부 확인
     // 방향 ----->
     if (partyService.get(partyNo).getWriter().getNo() != loginMember.getNo()) {
-      throw new Exception("게시글 작성자가 아닙니다.");
+      throw new Exception("파티 게시글 작성자가 아닙니다.");
     }
   }
 

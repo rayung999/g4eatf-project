@@ -1,12 +1,19 @@
 package com.goteatfproject.appgot.web;
 
+import com.goteatfproject.appgot.vo.AttachedFile;
+import com.goteatfproject.appgot.vo.Party;
 import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.Part;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,16 +47,12 @@ public class MyController {
   FeedService feedService;
   @Autowired
   MemberService memberService;
-
   @Autowired
   EventService eventService;
-
   @Autowired
   FollowerService followerService;
-
   @Autowired
   BoardService boardService;
-
   @Autowired
   ServletContext sc;
 
@@ -378,6 +381,70 @@ public class MyController {
       followerService.allDelete3(checkedValue[i]);
     }
     return "삭제 성공";
+  }
+
+  // 파티 게시물 수정
+  @PostMapping("updateParty")
+  public String update(Party party, HttpSession session,
+      Part[] files) throws Exception {
+
+    party.setAttachedFiles(saveAttachedFiles(files));
+
+    // detail.html : <input name="no" type="number" value="1" th:value="${party.no}" readonly hidden/>
+    // 위에 추가해야 party.getNo() 가져오기 가능 System.out.println("partyNo = " + party.getNo());
+    checkOwner2(party.getNo(), session);
+
+    if (!partyService.update(party)) {
+      throw new Exception("게시글을 변경할 수 없습니다.");
+    }
+    return "redirect:main";
+  }
+
+  private void checkOwner2(int partyNo, HttpSession session) throws Exception {
+    Member loginMember = (Member) session.getAttribute("loginMember");
+    // 개인이해메모
+    // getWriter().getNo() != loginMember.getNo() // 로그인 멤버no 꺼내서 party에 있는 Member writer 이용해서 일치여부 확인
+    // 방향 ----->
+    if (partyService.get(partyNo).getWriter().getNo() != loginMember.getNo()) {
+      throw new Exception("파티 게시글 작성자가 아닙니다.");
+    }
+  }
+
+  private List<AttachedFile> saveAttachedFiles(Part[] files)
+      throws IOException, ServletException {
+    List<AttachedFile> attachedFiles = new ArrayList<>();
+    String dirPath = sc.getRealPath("/party/files");
+
+    for (Part part : files) {
+      if (part.getSize() == 0) {
+        continue;
+      }
+      String filename = UUID.randomUUID().toString();
+      part.write(dirPath + "/" + filename);
+      attachedFiles.add(new AttachedFile(filename));
+    }
+    return attachedFiles;
+  }
+
+  private List<AttachedFile> saveAttachedFiles(MultipartFile[] files)
+      throws IOException, ServletException {
+    List<AttachedFile> attachedFiles = new ArrayList<>();
+    String dirPath = sc.getRealPath("/party/files");
+
+    for (MultipartFile part : files) {
+      if (part.isEmpty()) {
+        continue;
+      }
+
+      System.out.println("filename3 = " + Arrays.toString(files));
+      System.out.println("filename4 = " + files);
+      System.out.println("dirPath = " + dirPath);
+
+      String filename = UUID.randomUUID().toString();
+      part.transferTo(new File(dirPath + "/" + filename));
+      attachedFiles.add(new AttachedFile(filename));
+    }
+    return attachedFiles;
   }
 
 }

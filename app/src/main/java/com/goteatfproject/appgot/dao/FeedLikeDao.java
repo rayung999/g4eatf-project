@@ -20,7 +20,7 @@ public interface FeedLikeDao {
 
   int isLike(FeedLike feedLike);
 
-
+int deleteLikeAll(int no);
 
 
 }

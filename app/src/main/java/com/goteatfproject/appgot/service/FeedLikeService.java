@@ -13,4 +13,5 @@ public interface FeedLikeService {
 
   int isLike(FeedLike feedLike) throws Exception;
 
+
 }
