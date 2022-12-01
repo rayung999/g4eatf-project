@@ -36,7 +36,7 @@
       <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/my/myAuthForm}">개인 정보 수정</a>
       <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/my/myPartyList}">파티게시물 관리</a>
       <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/my/myFeedList}">피드게시물 관리</a>
-      <a class="list-group-item list-group-item-action list-group-item-light p-3" href="">예약 내역</a>
+      <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/my/myReservationList}">예약 내역 관리</a>
       <a class="list-group-item list-group-item-action list-group-item-light p-3" th:href="@{/my/myFollowList}">팔로우 관리</a>
     </div>
   </div>
@@ -98,7 +98,7 @@
                   </p><br>
 
                   <p style="float: left">
-                    <button type="button" class="btn btn-outline-dark col-1" onclick="sample4_execDaumPostcode()" value="우편번호 찾기" style="background-color: #ffc107; border-color: white; width: 120px; height: 38px;">우편번호 검색</button>
+                    <button type="button" class="btn btn-outline-secondary col-1" onclick="sample4_execDaumPostcode()" value="우편번호 찾기" style="width: 120px; height: 38px;">우편번호 검색</button>
                   </p>
                 </td>
               </tr>
@@ -147,9 +147,30 @@
               </tr>
 
             </table>
-            <button type="button"  class="btn btn-outline-dark" style="background-color: #ffc107; border-color: white" id="updateBtn">수정</button>
-            <button type="button"  class="btn btn-outline-dark" style="background-color: #ffc107; border-color: white" id="deleteBtn">회원 탈퇴</button>
+            <button type="button" class="btn btn-outline-secondary" id="updateBtn">수정</button>
+            <button type="button" class="btn btn-outline-secondary" id="deleteBtn" data-bs-toggle="modal" data-bs-target="#xx-delete-btn">회원 탈퇴</button>
           </form>
+
+          <!-- 회원탈퇴 버튼 모달 -->
+          <div class="modal fade" id="xx-delete-btn" tabindex="-1">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">회원탈퇴를 진행하시겠습니까?</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <p>탈퇴 진행을 재확인해주세요.</p>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary xx-member-delete-no" data-bs-dismiss="modal" value="false">NO</button>
+                  <button type="button" class="btn btn-primary xx-member-delete-yes" value="true">YES</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- 회원탈퇴 버튼 모달 마지막-->
+
           <div class="line-2"></div>
         </div>
       </div>
@@ -157,6 +178,7 @@
     </div>
   </div>
 </div>
+
 <!-------------------------------구분선-------------------------->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3" crossorigin="anonymous"></script>
 <!-- Core theme JS-->
@@ -216,21 +238,49 @@
 
   /*    닉네임 중복체크 마지막 */
 
-
   // 회원 탈퇴(비활성화)
-  $("#deleteBtn").click(function() {
-    let memberNo = $("#memberNo").val();
+  $('.xx-member-delete-yes').click(function () {
+    let memberNo = $('#memberNo').val();
+    let button = $('.xx-member-delete-yes').val();
+    // let data = {"no": memberNo, "outState": button};
     $.ajax({
-      type: "post",
       url: "/my/delete",
-      data: {"no": memberNo}, // 파라미터 :  파라미터 값
-      success: function(result) {
-        console.log(result);
-        window.location.href = "/";
+      type: "POST",
+      data: {"no": memberNo, "outState": button},
+      success: function (result) {
+        if (result == "1") {
+          alert('탈퇴되었습니다.')
+          location.href="/"
+        } else {
+          alert('그래 사이트 더 봐~')
+        }
+      }, error: function (jpXHR, status, error) {
+        alert("다시!!!! [ " + error + " ]");
       }
     })
   });
 
+  $('.xx-member-delete-no').click(function () {
+    let memberNo = $('#memberNo').val();
+    let button = $('.xx-member-delete-no').val();
+    console.log(memberNo);
+    console.log(button);
+    // let data = {"no": memberNo, "outState": button};
+    $.ajax({
+      url: "/my/delete",
+      type: "POST",
+      data: {"no": memberNo, "outState": button},
+      success: function (result) {
+        if (result == "1") {
+          alert('탈퇴빠이')
+        } else {
+          alert('탈퇴 진행이 취소되었습니다.')
+        }
+      }, error: function (jpXHR, status, error) {
+        alert("다시!!!! [ " + error + " ]");
+      }
+    })
+  });
 
   /* 우편번호 조회 */
   //본 예제에서는 도로명 주소 표기 방식에 대한 법령에 따라, 내려오는 데이터를 조합하여 올바른 주소를 구성하는 방법을 설명합니다.

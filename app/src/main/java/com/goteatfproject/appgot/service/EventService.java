@@ -6,6 +6,7 @@ import com.goteatfproject.appgot.vo.Criteria;
 import com.goteatfproject.appgot.vo.Event;
 import com.goteatfproject.appgot.vo.EventComment;
 import com.goteatfproject.appgot.vo.Party;
+import com.goteatfproject.appgot.vo.Ticket;
 import java.util.List;
 import java.util.Map;
 
@@ -62,6 +63,9 @@ public interface EventService {
 
   // 검색페이지 결과
   List<Party> searchList(String keywordAll) throws Exception;
+
+  List<Ticket> getTicketNo(int no) throws Exception;
+
 
 }
 

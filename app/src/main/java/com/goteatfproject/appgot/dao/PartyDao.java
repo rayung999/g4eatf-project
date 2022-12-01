@@ -26,6 +26,7 @@ public interface PartyDao {
   List<Map<String, Object>> selectPartyList(Criteria cri);
 
   Party findByNo(int no);
+  Party findByNo2(int no);
 
   // 마이페이지 파티게시글 수정
   int update(Party party);

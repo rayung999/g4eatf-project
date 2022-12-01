@@ -19,6 +19,7 @@ public interface PartyService {
   //페이징
   List<Map<String, Object>> selectPartyList(Criteria criteria);
   Party get(int no) throws Exception;
+  Party get2(int no) throws Exception;
 
   // 마이페이지 파티게시글 수정
   boolean update(Party party) throws Exception;

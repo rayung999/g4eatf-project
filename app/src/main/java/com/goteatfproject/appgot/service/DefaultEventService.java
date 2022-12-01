@@ -1,12 +1,14 @@
 package com.goteatfproject.appgot.service;
 
 import com.goteatfproject.appgot.dao.EventDao;
+import com.goteatfproject.appgot.dao.TicketDao;
 import com.goteatfproject.appgot.vo.AttachedFile;
 import com.goteatfproject.appgot.vo.Comment;
 import com.goteatfproject.appgot.vo.Criteria;
 import com.goteatfproject.appgot.vo.Event;
 import com.goteatfproject.appgot.vo.EventComment;
 import com.goteatfproject.appgot.vo.Party;
+import com.goteatfproject.appgot.vo.Ticket;
 import java.util.List;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +20,9 @@ public class DefaultEventService implements EventService {
 
   @Autowired
   EventDao eventDao;
+
+  @Autowired
+  TicketDao ticketDao;
 
   @Override
   @Transactional
@@ -153,6 +158,12 @@ public class DefaultEventService implements EventService {
   // 검색페이지 결과
   public List<Party> searchList(String keywordAll) throws Exception {
     return eventDao.findAllSearch(keywordAll);
+  }
+
+  @Override
+  public List<Ticket> getTicketNo(int no) throws Exception {
+
+    return ticketDao.findByNo(no);
   }
 }
 

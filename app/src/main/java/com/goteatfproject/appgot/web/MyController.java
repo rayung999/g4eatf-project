@@ -101,7 +101,7 @@ public class MyController {
     System.out.println("member = " + member);
     System.out.println(member.getPassword() == "");
     // 새로운 패스워드가 없을때는 udpate2()
-    if(member.getPassword() == "") {
+    if (member.getPassword() == "") {
       memberService.update2(member);
     } else { // 새로운 패스워드 변경이 있을때 update()
       memberService.update(member);
@@ -112,7 +112,8 @@ public class MyController {
 
   // 마이페이지 메인 프로필 사진 수정
   @PostMapping("/updateProfile")
-  public String updateProfile(@RequestParam("files") MultipartFile files, HttpSession session) throws Exception {
+  public String updateProfile(@RequestParam("files") MultipartFile files, HttpSession session)
+      throws Exception {
     Member member = (Member) session.getAttribute("loginMember");
     if (!files.isEmpty()) {
       String dirPath = sc.getRealPath("/member/files");
@@ -143,14 +144,21 @@ public class MyController {
   // 마이페이지 회원 비활성화
   @PostMapping("/delete")
   @ResponseBody
-  public String delete(HttpSession session, int no) throws Exception {
-    Member member = (Member) session.getAttribute("loginMember");
-    if (member.getNo() == no) {
-      memberService.delete(no);
-      session.invalidate();
-      return "회원 탈퇴 완료";
+  public String delete(HttpSession session, @RequestParam("no") int no,
+      @RequestParam("outState") boolean outState) throws Exception {
+
+    System.out.println("out =====> " + outState);
+
+    if (outState != false) {
+      Member member = (Member) session.getAttribute("loginMember");
+      if (member.getNo() == no) {
+        memberService.delete(no);
+        session.invalidate();
+        return "1";
+//        return "회원 탈퇴 완료";
+      }
     }
-    return "회원 탈퇴 실패";
+    return "0";
   }
 
   // 마이페이지-파티게시글 관리
@@ -192,7 +200,7 @@ public class MyController {
   public String partyDeletes(@RequestParam("checkedValue[]") int[] checkedValue) throws Exception {
     int valueLength = checkedValue.length;
 
-    for(int i=0; i < valueLength; i++) {
+    for (int i = 0; i < valueLength; i++) {
       System.out.println(checkedValue[i]);
       partyService.allDelete(checkedValue[i]);
     }
@@ -257,7 +265,7 @@ public class MyController {
   public String feedDeletes(@RequestParam("checkedValue[]") int[] checkedValue) throws Exception {
     int valueLength = checkedValue.length;
 
-    for(int i=0; i < valueLength; i++) {
+    for (int i = 0; i < valueLength; i++) {
       System.out.println(checkedValue[i]);
       feedService.allDelete2(checkedValue[i]);
     }
@@ -274,7 +282,6 @@ public class MyController {
     System.out.println("feedAttachedFile.getNo() = " + feedAttachedFile.getNo());
     System.out.println("feedAttachedFile.getNo() = " + feedAttachedFile.getFilepath());
     System.out.println("feedAttachedFile.getNo() = " + feedAttachedFile.getFeedNo());
-
 
     // 게시글 작성자 일치여부
     Member loginMember = (Member) session.getAttribute("loginMember");
@@ -355,7 +362,7 @@ public class MyController {
 
     Member loginMember = (Member) session.getAttribute("loginMember");
 
-    if(loginMember != null) {
+    if (loginMember != null) {
       List<Follower> followList = followerService.selectFollowList(loginMember.getNo());
       model.addAttribute("follows", followList);
       System.out.println("model.getAttribute(\"follows\") = " + model.getAttribute("follows"));
@@ -376,7 +383,7 @@ public class MyController {
   public String followDeletes(@RequestParam("checkedValue[]") int[] checkedValue) throws Exception {
     int valueLength = checkedValue.length;
 
-    for(int i=0; i < valueLength; i++) {
+    for (int i = 0; i < valueLength; i++) {
       System.out.println(checkedValue[i]);
       followerService.allDelete3(checkedValue[i]);
     }
@@ -397,7 +404,7 @@ public class MyController {
     if (!partyService.update(party)) {
       throw new Exception("게시글을 변경할 수 없습니다.");
     }
-    return "redirect:main";
+    return "redirect:myPartyList";
   }
 
   private void checkOwner2(int partyNo, HttpSession session) throws Exception {
@@ -445,6 +452,17 @@ public class MyController {
       attachedFiles.add(new AttachedFile(filename));
     }
     return attachedFiles;
+  }
+
+  // 마이페이지 예약 내역 관리
+  @GetMapping("/myReservationList")
+  public String myReservationList(Model model, HttpSession session) throws Exception {
+    Member loginMember = (Member) session.getAttribute("loginMember");
+    if (loginMember != null) {
+      model.addAttribute("tickets", eventService.getTicketNo(loginMember.getNo()));
+      return "mypage/myReservationList";
+    }
+    return "/auth/login";
   }
 
 }

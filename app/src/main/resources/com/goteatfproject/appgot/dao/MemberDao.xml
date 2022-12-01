@@ -65,7 +65,6 @@
     mno,
     name,
     id,
-    nick,
     createddate,
     thumbnail
     from

@@ -56,6 +56,10 @@ public class DefaultPartyService implements PartyService {
     partyDao.updatePartyCount(no);
     return partyDao.findByNo(no);
   }
+  @Override
+  public Party get2(int no) throws Exception {
+    return partyDao.findByNo2(no);
+  }
 
   // 마이페이지 파티게시글 수정
   @Transactional

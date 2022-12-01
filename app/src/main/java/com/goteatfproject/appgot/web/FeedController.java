@@ -373,7 +373,7 @@ public class FeedController {
   @PostMapping("update")
   public String update(Feed feed, Model model, HttpSession session) throws Exception {
 
-    System.out.println("session4 = " + session.getAttribute("loginMember"));
+    System.out.println("session4 =---> " + session.getAttribute("loginMember"));
 
     String nick = URLEncoder.encode(feed.getWriter().getNick(), "UTF-8");
     System.out.println("nick = " + nick);
@@ -395,15 +395,15 @@ public class FeedController {
   }
 
   @GetMapping("delete")
-  public String delete(int no, HttpSession session, Model model) throws Exception {
+  public String delete(int no, HttpSession session) throws Exception {
+
+//    String nick = feedService.get(no).getWriter().getNick();
+    String nick = URLEncoder.encode(feedService.get(no).getWriter().getNick(), "UTF-8");
+    System.out.println("deleteNick ====> " + nick);
     checkOwner(no, session);
     feedService.delete(no);
-//    if (!feedService.delete(no)) {
-//      throw new Exception("게시글을 삭제할 수 없습니다.");
-//    }
 
-    Member member = (Member) session.getAttribute("loginMember");
-    String nick = URLEncoder.encode(member.getNick(), "UTF-8");
+//    return "redirect:personal";
     return "redirect:personal?nick=" + nick;
   }
 

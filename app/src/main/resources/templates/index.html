@@ -20,7 +20,25 @@
     .eventsection{
       background-color: rgba(255,40,39,0.06);
     }
+  </style>
 
+  <style>
+    .partysection{
+      background-color: rgba(255,246,210,0.2);
+    }
+
+    .eventsection{
+      background-color: rgba(255,40,39,0.06);
+    }
+
+    .pipi
+    {
+      height:300px ;
+    }
+
+    div {
+      font-weight: bold;
+    }
   </style>
 
   <!-- jquery -->
@@ -220,7 +238,7 @@
               <div class="card-footer  align-self-end">
                 <div class="line-3"></div><div class="line-3"></div>
                 <div class="media" >
-                  <img class="mr-3 rounded-circle" th:src="@{/member/files/{path}(path=${feed.writer.thumbnail})}" alt="Generic placeholder image" style="max-width:50px">
+                  <img class="mr-3 rounded-circle" src="https://assets.codepen.io/460692/internal/avatars/users/default.png" alt="Generic placeholder image" style="max-width:50px">
                   <div class="line-2"></div>
                   <div class="media-body">
                     <h6 class="my-0 text-white d-block" th:text="${feed.writer.nick}"></h6>
@@ -250,7 +268,7 @@
 <!-------------------------------구분선-------------------------->
 <div class="c-example-divider"></div>
 <!------------------------------footer------------------------------>
-<footer class="py-3 my-4" th:fragment="fragment-footer" >
+<footer class="py-3 my-4">
   <ul class="nav justify-content-center border-bottom pb-3 mb-3">
     <li class="nav-item"><a th:href="@{/}" class="nav-link px-2 text-muted">Home</a></li>
     <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Features</a></li>

@@ -60,10 +60,8 @@
           <div class="col-12">
             <input name="following" data-th-value="${session.loginMember.no}" type="hidden">
             <input name="follow" data-th-value="${session.loginMember.no}" type="hidden">
-            <button data-th-if="${followCheck} == 1 and ${session.loginMember.no} != ${member.no}" type="button" id="unfollow-btn" th:value="${member.no}"
-                    class="btn btn-outline-dark" style="background-color: #ffc107; border-color: white">언팔로우 하기</button>
-            <button data-th-if="${followCheck} == 0 and ${session.loginMember.no} != ${member.no}" type="button" id="follow-btn" th:value="${member.no}"
-                    class="btn btn-outline-dark" style="background-color: #ffc107; border-color: white">팔로우 하기</button>
+            <button data-th-if="${followCheck} == 1 and ${session.loginMember.no} != ${member.no}" type="button" id="unfollow-btn" th:value="${member.no}" class="btn btn-outline-secondary">언팔로우 하기</button>
+            <button data-th-if="${followCheck} == 0 and ${session.loginMember.no} != ${member.no}" type="button" id="follow-btn" th:value="${member.no}" class="btn btn-outline-secondary">팔로우 하기</button>
           </div>
         </form>
         <div class="line-2"></div>
@@ -104,7 +102,7 @@
               <div class="image"
                    style="border-radius: 50%; border: 3px solid #ffc107; object-fit: cover;">
                 <img th:src="@{/member/files/{path}(path=${personal.writer.thumbnail})}"
-                     alt="춘데렐라" style="width: 60px; height: 60px; ">
+                     alt="춘데렐라" style="width: 60px; height: 60px;">
               </div>
               <div class="details">
                 <p class="name" th:text="${personal.writer.nick}"></p>
@@ -112,8 +110,7 @@
               </div>
             </div>
             <div class="post-right">
-              <button th:if="${session.loginMember.no} == ${member.no}" th:onclick="|location.href='/../feed/@{updateForm(no=${personal.no})}'|"
-                      class="btn btn-outline-dark" style="background-color: #ffc107; border-color: white" role="button" data-bs-toggle="button">수정</button>
+              <button th:if="${session.loginMember.no} == ${member.no}" th:onclick="|location.href='/../feed/@{updateForm(no=${personal.no})}'|" class="btn btn-outline-dark" role="button" data-bs-toggle="button" style="background-color: #ffc107; border-color: white">수정</button>
             </div>
           </div>
 
@@ -151,7 +148,6 @@
       </th:block>
     </div>
   </div>
-</div>
 </div>
 
 

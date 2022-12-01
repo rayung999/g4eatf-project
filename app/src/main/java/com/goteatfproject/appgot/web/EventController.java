@@ -48,7 +48,7 @@ public class EventController {
   // 파티 게시판 페이징 적용
   @GetMapping("list")
   @ResponseBody
-  public ModelAndView selectEventList(Event event, Criteria cri) throws Exception {
+  public ModelAndView selectEventList(Event event, Criteria cri, HttpSession session) throws Exception {
 
     ModelAndView mv = new ModelAndView();
 
@@ -66,8 +66,13 @@ public class EventController {
 
   // 파티 리스트 게시물 등록
   @GetMapping("form")
-  public String eventFrom() throws Exception {
+  public String eventFrom(HttpSession session) throws Exception {
+//    Member member = (Member) session.getAttribute("loginMember");
+//    if (member.getId().equals("admin@test.com")){
     return "event/eventAdd";
+//    }
+//      return "redirect:/admin/main";
+//    return "redirect:/auth/login";
   }
 
   // 파티 리스트 게시물 등록 post

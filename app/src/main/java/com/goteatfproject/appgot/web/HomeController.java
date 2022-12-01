@@ -2,7 +2,6 @@ package com.goteatfproject.appgot.web;
 
 import com.goteatfproject.appgot.service.EventService;
 import com.goteatfproject.appgot.service.FeedService;
-import com.goteatfproject.appgot.service.MemberService;
 import com.goteatfproject.appgot.service.PartyService;
 import javax.servlet.ServletContext;
 import org.springframework.stereotype.Controller;

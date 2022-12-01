@@ -11,7 +11,7 @@
     <result column="cont" property="content"/>
     <result column="date" property="date"/>
     <result column="feedThumbnail" property="thumbnail"/>
-<!--    <result column="thumbnail" property="thumbnail"/>-->
+    <!--    <result column="thumbnail" property="thumbnail"/>-->
     <result column="pub" property="pub"/>
     <result column="likecnt" property="likeCnt"/>
 
@@ -301,14 +301,13 @@
     where fno = #{no}
   </update>
 
-<!-- 간치 -->
+  <!-- 간치 -->
   <select id="findAllMain" resultMap="feedMap">
     select
     f.fno,
     m.mno,
     m.nick,
     m.addr,
-    m.thumbnail,
     f.title,
     f.cont,
     f.date,
@@ -319,14 +318,14 @@
     limit 8
   </select>
 
-<!--  마이페이지 피드게시글 강제삭제-->
+  <!--  마이페이지 피드게시글 강제삭제-->
   <delete id="allDelete2">
     delete from feed_like where fno=#{no};
     delete from feed_file where fno=#{no};
     delete from feed where fno=#{no};
   </delete>
 
-<!-- 검색결과 페이지 -->
+  <!-- 검색결과 페이지 -->
   <select id="findAllSearch" resultMap="feedMap">
     select
     f.fno,

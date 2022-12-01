@@ -61,11 +61,13 @@ public class LoginController {
       return "redirect:/admin/main";
     }
 
-//    toURL = toURL==null || toURL.equals("") ? "/" : toURL;
-//
-//    return "redirect:"+toURL;
+    System.out.println("toURL ======> " + toURL);
 
-    return "redirect:/";
+    toURL = toURL==null || toURL.equals("") ? "/" : toURL;
+//
+    return "redirect:"+toURL;
+
+//    return "redirect:/";
   }
 
   @GetMapping("/logout")

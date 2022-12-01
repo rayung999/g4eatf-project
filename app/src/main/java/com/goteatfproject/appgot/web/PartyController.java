@@ -17,6 +17,7 @@ import java.util.Objects;
 import java.util.UUID;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 import org.springframework.stereotype.Controller;
@@ -69,11 +70,12 @@ public class PartyController {
 
   // 파티게시판 : 페이징 보류, 카테고리 분류 추가
   @GetMapping("list")
-  public String partyList(Model model, String meal, String food, HttpSession session) throws Exception {
+  public String partyList(Model model, String meal, String food, HttpSession session, HttpServletRequest request) throws Exception {
     model.addAttribute("parties", partyService.list2(meal, food));
     model.addAttribute("meal", meal);
     model.addAttribute("food", food);
     System.out.println("model.getAttribute(\"parties\") = " + model.getAttribute("parties"));
+
 
 // 참여하기 버튼 ->
       // 파티 참여신청 버튼 추가 진행중
@@ -95,8 +97,19 @@ public class PartyController {
 
   // 파티 리스트 게시물 등록
   @GetMapping("form")
-  public String partyFrom() throws Exception {
+  public String partyFrom(HttpServletRequest request) throws Exception {
+
+    if (!loginCheck(request)) {
+      return "redirect:/auth/login?toURL=" + request.getRequestURL();
+    }
+
     return "party/partyAdd";
+  }
+  private boolean loginCheck(HttpServletRequest request) {
+    // 1. 세션을 얻어서
+    HttpSession session = request.getSession();
+    // 2. 세션에 id가 있는지 확인, 있으면 true를 반환
+    return session.getAttribute("loginMember")!=null;
   }
 
   // 파티 리스트 게시물 등록 post
