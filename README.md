@@ -53,4 +53,4 @@ bitcamp got project
 ![](https://velog.velcdn.com/images/rayung999/post/a39f4fd5-db56-4d37-a5b4-b299fbafc923/image.png)
 ![](https://velog.velcdn.com/images/rayung999/post/4af322d6-23e4-4a96-a9b6-282d7cb12180/image.png)
 
-12. 테스트 밑 디버깅
+12. 테스트 및 디버깅
